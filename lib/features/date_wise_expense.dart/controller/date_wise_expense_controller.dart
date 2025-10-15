@@ -18,12 +18,21 @@ class DateWiseExpenseController extends _$DateWiseExpenseController {
 
   Future<void> fetchDateWiseExpenses(DateTime dateTime) async {
     state = const AsyncValue.loading();
+
     try {
       final expenses = await _expenseRepository.getExpensesByDate(dateTime);
-      expenses.sort(
+      final List<ExpenseModel> todayExpenses = expenses.where((expense) {
+        final DateTime expenseDate = DateTime.parse(expense.date);
+
+        return expenseDate.year == dateTime.year &&
+            expenseDate.month == dateTime.month &&
+            expenseDate.day == dateTime.day;
+      }).toList();
+
+      todayExpenses.sort(
         (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)),
       );
-      state = AsyncValue.data(expenses);
+      state = AsyncValue.data(todayExpenses);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
