@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/features/date_wise_expense.dart/controller/date_wise_expense_controller.dart';
+import 'package:spendwise/features/date_wise_expense.dart/controller/date_wise_notifier_new.dart';
 import 'package:spendwise/features/date_wise_expense.dart/presentation/widgets/date_selector.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_bar_chart.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_tile.dart';

@@ -36,6 +36,6 @@ class RegisterScreenController extends _$RegisterScreenController {
   }
 
   void navigateToLoginScreen(BuildContext context) {
-    Navigator.pushNamed(context, Routes.loginScreen);
+    Navigator.pushReplacementNamed(context, Routes.loginScreen);
   }
 }

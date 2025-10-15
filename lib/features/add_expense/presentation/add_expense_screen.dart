@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/features/add_expense/presentation/controller/add_expense_controller.dart';
+import 'package:spendwise/features/add_expense/presentation/controller/add_new_expense_notifer_new.dart';
 import 'package:spendwise/utils/firestore/domain/expense_model.dart';
 import 'package:spendwise/widget/async_value_widget.dart';
 // import '../services/firestore_service.dart';
@@ -184,7 +184,10 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text('Save Expense'),
+                    child: const Text(
+                      'Save Expense',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),

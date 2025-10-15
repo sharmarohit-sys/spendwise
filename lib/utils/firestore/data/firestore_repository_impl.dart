@@ -18,7 +18,7 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
   late String collectionName;
 
   @override
-  Future<void> addUser({
+  Future<bool> addUser({
     required String name,
     required String email,
     required String uId,
@@ -33,19 +33,21 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
 
       // Update the expense with the generated doc ID
       await docRef.update({'id': docRef.id});
+      return true;
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<void> addExpense({required ExpenseModel expense}) async {
+  Future<bool> addExpense({required ExpenseModel expense}) async {
     try {
       // Add without id first
       final docRef = await _db.collection(collectionName).add(expense.toJson());
 
       // Update the expense with the generated doc ID
       await docRef.update({'id': docRef.id});
+      return true;
     } catch (e) {
       rethrow;
     }
@@ -53,7 +55,7 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
 
   // New edit/update method
   @override
-  Future<void> editExpense({
+  Future<bool> editExpense({
     required String expenseId,
     required ExpenseModel expense,
   }) async {
@@ -62,15 +64,17 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
           .collection(collectionName)
           .doc(expenseId)
           .update(expense.toJson());
+      return true;
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<void> deleteExpense({required String expenseId}) async {
+  Future<bool> deleteExpense({required String expenseId}) async {
     try {
       await _db.collection(collectionName).doc(expenseId).delete();
+      return true;
     } catch (e) {
       rethrow;
     }

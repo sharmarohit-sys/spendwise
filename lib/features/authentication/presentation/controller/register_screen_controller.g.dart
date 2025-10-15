@@ -34,7 +34,7 @@ final class RegisterScreenControllerProvider
 }
 
 String _$registerScreenControllerHash() =>
-    r'5b1e155a5b8e8855e34b4e6cb9dc689ab2e833e7';
+    r'9a842eb7d6affe84d98526b412e0a56bc126e43b';
 
 abstract class _$RegisterScreenController extends $AsyncNotifier<void> {
   FutureOr<void> build();

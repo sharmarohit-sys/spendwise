@@ -1,20 +1,18 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/utils/firestore/domain/expense_model.dart';
-import 'package:spendwise/utils/firestore/domain/firestore_repository.dart';
 import 'package:spendwise/utils/firestore/data/firestore_repository_impl.dart';
 
-part 'date_wise_expense_controller.g.dart';
+import '../../../utils/firestore/domain/expense_model.dart';
 
-@riverpod
-class DateWiseExpenseController extends _$DateWiseExpenseController {
-  final _expenseRepository = getIt<FirestoreRepositoryImpl>();
-
-  @override
-  FutureOr<List<ExpenseModel>> build() {
+class DateWiseExpenseControllerNew
+    extends StateNotifier<AsyncValue<List<ExpenseModel>>> {
+  DateWiseExpenseControllerNew(this._expenseRepository)
+    : super(const AsyncValue.data([])) {
     fetchDateWiseExpenses(DateTime.now());
-    return [];
   }
+  // final _expenseRepository = getIt<FirestoreRepositoryImpl>();
+  final FirestoreRepositoryImpl _expenseRepository;
 
   Future<void> fetchDateWiseExpenses(DateTime dateTime) async {
     state = const AsyncValue.loading();
@@ -60,3 +58,12 @@ class DateWiseExpenseController extends _$DateWiseExpenseController {
     return filtered;
   }
 }
+
+final dateWiseExpenseControllerProvider =
+    StateNotifierProvider.autoDispose<
+      DateWiseExpenseControllerNew,
+      AsyncValue<List<ExpenseModel>>
+    >((ref) {
+      final expenseRepository = getIt<FirestoreRepositoryImpl>();
+      return DateWiseExpenseControllerNew(expenseRepository);
+    });

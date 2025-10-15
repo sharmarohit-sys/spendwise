@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:spendwise/dependencies.dart';
+import 'package:spendwise/navigation/routes.dart';
+
+import 'package:spendwise/utils/firestore/data/firestore_repository_impl.dart';
 import 'package:spendwise/utils/firestore/domain/expense_model.dart';
 
-import 'package:spendwise/navigation/routes.dart';
-import 'package:spendwise/utils/firestore/data/firestore_repository_impl.dart';
-part 'home_controller.g.dart';
-
-@riverpod
-class HomeController extends _$HomeController {
-  final _expenseRepository = getIt<FirestoreRepositoryImpl>();
-
-  @override
-  FutureOr<List<ExpenseModel>> build() {
+class HomeControllerNew extends StateNotifier<AsyncValue<List<ExpenseModel>>> {
+  HomeControllerNew(this._expenseRepository)
+    : super(const AsyncValue.data([])) {
     fetchExpenses();
-    return [];
   }
+  // final _expenseRepository = getIt<FirestoreRepositoryImpl>();
+  final FirestoreRepositoryImpl _expenseRepository;
 
   Future<void> fetchExpenses() async {
     state = const AsyncValue.loading();
@@ -82,3 +80,8 @@ class HomeController extends _$HomeController {
     Navigator.pushNamed(context, Routes.dateWiseExpenseScreen);
   }
 }
+
+final homeControllerProvider =
+    StateNotifierProvider<HomeControllerNew, AsyncValue<List<ExpenseModel>>>(
+      (ref) => HomeControllerNew(getIt<FirestoreRepositoryImpl>()),
+    );

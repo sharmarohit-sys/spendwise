@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/features/invalid_expense/presentation/controller/invalid_expense_controller.dart';
+import 'package:spendwise/features/invalid_expense/presentation/controller/invalid_expense_notifier_new.dart';
 import 'package:spendwise/widget/async_value_widget.dart';
 
 class InvalidExpenseScreen extends ConsumerStatefulWidget {

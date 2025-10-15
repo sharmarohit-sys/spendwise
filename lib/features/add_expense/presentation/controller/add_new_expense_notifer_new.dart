@@ -1,20 +1,15 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/utils/firestore/domain/expense_model.dart';
 import 'package:spendwise/utils/firestore/data/firestore_repository_impl.dart';
-part 'add_expense_controller.g.dart';
+import 'package:spendwise/utils/firestore/domain/expense_model.dart';
 
-@riverpod
-class AddExpenseController extends _$AddExpenseController {
-  final _expenseRepository = getIt<FirestoreRepositoryImpl>();
+class AddNewExpenseNotifier extends StateNotifier<AsyncValue<ExpenseModel?>> {
+  AddNewExpenseNotifier(this._expenseRepository)
+    : super(const AsyncValue.data(null));
 
-  @override
-  FutureOr<ExpenseModel?> build() {
-    return null; // initial state
-  }
+  final FirestoreRepositoryImpl _expenseRepository;
 
   Future<void> addExpense(
     BuildContext context, {
@@ -29,8 +24,10 @@ class AddExpenseController extends _$AddExpenseController {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Expense added successfully')),
         );
+
         Navigator.pop(context, true);
       }
+      state = const AsyncValue.data(null);
     } catch (e, st) {
       // On error, update the state to error
       state = AsyncValue.error(e, st);
@@ -48,12 +45,14 @@ class AddExpenseController extends _$AddExpenseController {
         expenseId: expenseId,
         expense: expense,
       );
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Expense Updated successfully')),
         );
         Navigator.pop(context, true);
       }
+      state = const AsyncValue.data(null);
     } catch (e, st) {
       // On error, update the state to error
       state = AsyncValue.error(e, st);
@@ -67,15 +66,26 @@ class AddExpenseController extends _$AddExpenseController {
     state = const AsyncValue.loading();
     try {
       await _expenseRepository.deleteExpense(expenseId: expenseId);
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Expense Deleted successfully')),
         );
         Navigator.pop(context, true);
       }
+      state = const AsyncValue.data(null);
     } catch (e, st) {
       // On error, update the state to error
       state = AsyncValue.error(e, st);
     }
   }
 }
+
+final addExpenseControllerProvider =
+    StateNotifierProvider.autoDispose<
+      AddNewExpenseNotifier,
+      AsyncValue<ExpenseModel?>
+    >((ref) {
+      final expenseRepository = getIt<FirestoreRepositoryImpl>();
+      return AddNewExpenseNotifier(expenseRepository);
+    });

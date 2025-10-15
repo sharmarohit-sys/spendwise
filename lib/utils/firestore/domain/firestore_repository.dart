@@ -2,18 +2,18 @@
 import 'package:spendwise/utils/firestore/domain/expense_model.dart';
 
 abstract class FirestoreRepository {
-  Future<void> addUser({
+  Future<bool> addUser({
     required String name,
     required String email,
     required String uId,
   });
-  Future<void> addExpense({required ExpenseModel expense});
-  Future<void> editExpense({
+  Future<bool> addExpense({required ExpenseModel expense});
+  Future<bool> editExpense({
     required String expenseId,
     required ExpenseModel expense,
   });
 
-  Future<void> deleteExpense({required String expenseId});
+  Future<bool> deleteExpense({required String expenseId});
   Future<List<ExpenseModel>> getExpensesByUser();
   Future<List<ExpenseModel>> getExpensesByDate(DateTime date);
   Future<List<ExpenseModel>> getInvalidExpenses();

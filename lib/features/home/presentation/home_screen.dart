@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/features/home/presentation/controller/home_controller.dart';
+import 'package:spendwise/features/home/presentation/controller/home_controller_new.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_bar_chart.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_tile.dart';
 import 'package:spendwise/widget/async_value_widget.dart';
