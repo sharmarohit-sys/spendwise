@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/features/authentication/domain/model/result_model.dart';
 import 'package:spendwise/features/authentication/domain/usecases/login_user_usecase.dart';
 import 'package:spendwise/features/authentication/presentation/notifier/login_screen_notifier.dart';
-import 'package:spendwise/navigation/routes.dart';
+import 'package:spendwise/routes.dart';
 
 // ✅ Mock use case
 class MockLoginUserUseCase extends Mock implements LoginUserUseCase {}

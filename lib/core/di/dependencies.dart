@@ -1,10 +1,10 @@
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spendwise/utils/firestore/data/repository/firestore_repository_impl.dart';
-import 'package:spendwise/utils/firestore/domain/repository/firestore_repository.dart';
+import 'package:spendwise/core/services/firestore/data/repository/firestore_repository_impl.dart';
+import 'package:spendwise/core/services/firestore/domain/repository/firestore_repository.dart';
 import 'package:spendwise/features/authentication/data/repositories/authentication_repository.dart';
-import 'package:spendwise/utils/local_storage.dart';
+import 'package:spendwise/core/utils/local_storage.dart';
 
 final getIt = GetIt.instance;
 

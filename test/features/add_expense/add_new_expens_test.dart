@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:spendwise/features/add_expense/presentation/notifier/add_new_expense_notifer.dart';
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
-import 'package:spendwise/utils/firestore/domain/usecases/add_expense_usecase.dart';
-import 'package:spendwise/utils/firestore/domain/usecases/delete_expense_usecase.dart';
-import 'package:spendwise/utils/firestore/domain/usecases/edit_expense_usecase.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/services/firestore/domain/usecases/add_expense_usecase.dart';
+import 'package:spendwise/core/services/firestore/domain/usecases/delete_expense_usecase.dart';
+import 'package:spendwise/core/services/firestore/domain/usecases/edit_expense_usecase.dart';
 
 // ✅ Mock use cases
 class MockAddExpenseUseCase extends Mock implements AddExpenseUseCase {}

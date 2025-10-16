@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:spendwise/constants/shared_preference.dart';
+import 'package:spendwise/core/constants/shared_preference.dart';
 import 'package:spendwise/features/authentication/domain/repositories/authentication_repository_base.dart';
-import 'package:spendwise/utils/firestore/data/repository/firestore_repository_impl.dart';
+import 'package:spendwise/core/services/firestore/data/repository/firestore_repository_impl.dart';
 import 'package:spendwise/features/authentication/domain/model/result_model.dart';
-import 'package:spendwise/utils/local_storage.dart';
+import 'package:spendwise/core/utils/local_storage.dart';
 
 // class AuthenticationRepository {
 //   AuthenticationRepository({

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
 import 'package:spendwise/features/add_expense/presentation/add_expense_screen.dart';
 import 'package:spendwise/features/authentication/presentation/login_screen.dart';
 import 'package:spendwise/features/authentication/presentation/register_screen.dart';

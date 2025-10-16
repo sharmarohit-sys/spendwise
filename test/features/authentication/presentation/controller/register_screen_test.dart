@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/features/authentication/presentation/register_screen.dart';
-import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/core/constants/string_constants.dart';
 
 void main() {
   testWidgets('RegisterScreen displays all required fields and button', (

@@ -1,5 +1,5 @@
 // expense_repository.dart
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
 
 abstract class FirestoreRepository {
   Future<bool> addUser({

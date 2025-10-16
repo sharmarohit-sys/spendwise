@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:spendwise/constants/shared_preference.dart';
-import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
-import 'package:spendwise/utils/firestore/domain/repository/firestore_repository.dart';
-import 'package:spendwise/utils/local_storage.dart';
+import 'package:spendwise/core/constants/shared_preference.dart';
+import 'package:spendwise/core/di/dependencies.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/services/firestore/domain/repository/firestore_repository.dart';
+import 'package:spendwise/core/utils/local_storage.dart';
 
 class FirestoreRepositoryImpl implements FirestoreRepository {
   final _db = FirebaseFirestore.instance;

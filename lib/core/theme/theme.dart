@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spendwise/theme/colors.dart';
+import 'package:spendwise/core/theme/colors.dart';
 
 class SpendWiseTheme {
   static ColorScheme lightColorScheme = const ColorScheme(

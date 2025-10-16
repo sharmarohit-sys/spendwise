@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/utils/firestore/data/repository/firestore_repository_impl.dart';
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
-import 'package:spendwise/utils/firestore/domain/usecases/add_expense_usecase.dart';
-import 'package:spendwise/utils/firestore/domain/usecases/delete_expense_usecase.dart';
-import 'package:spendwise/utils/firestore/domain/usecases/edit_expense_usecase.dart';
+import 'package:spendwise/core/di/dependencies.dart';
+import 'package:spendwise/core/services/firestore/data/repository/firestore_repository_impl.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/services/firestore/domain/usecases/add_expense_usecase.dart';
+import 'package:spendwise/core/services/firestore/domain/usecases/delete_expense_usecase.dart';
+import 'package:spendwise/core/services/firestore/domain/usecases/edit_expense_usecase.dart';
 
 class AddNewExpenseNotifier extends StateNotifier<AsyncValue<ExpenseModel?>> {
   AddNewExpenseNotifier({

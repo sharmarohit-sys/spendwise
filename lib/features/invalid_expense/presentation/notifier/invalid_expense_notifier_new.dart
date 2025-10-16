@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
-import 'package:spendwise/utils/firestore/domain/usecases/get_invalid_expenses_usecase.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/services/firestore/domain/usecases/get_invalid_expenses_usecase.dart';
 
 class InvalidExpenseNotifier
     extends StateNotifier<AsyncValue<List<ExpenseModel>>> {

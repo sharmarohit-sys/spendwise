@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spendwise/constants/dimensions.dart';
+import 'package:spendwise/core/constants/dimensions.dart';
 
 class SpendWiseTextField extends StatelessWidget {
   const SpendWiseTextField({

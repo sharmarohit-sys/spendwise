@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/constants/string_constants.dart';
-import 'package:spendwise/dependencies.dart';
+import 'package:spendwise/core/constants/string_constants.dart';
+import 'package:spendwise/core/di/dependencies.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:spendwise/features/authentication/presentation/login_screen.dart';
-import 'package:spendwise/navigation/routes.dart';
-import 'package:spendwise/network/internet_provider.dart';
-import 'package:spendwise/theme/theme.dart';
+import 'package:spendwise/routes.dart';
+import 'package:spendwise/core/network/internet_provider.dart';
+import 'package:spendwise/core/theme/theme.dart';
 import 'firebase_options.dart';
 
 void main() async {

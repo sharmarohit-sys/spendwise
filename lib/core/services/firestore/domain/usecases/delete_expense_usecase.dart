@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/utils/firestore/data/repository/firestore_repository_impl.dart';
+import 'package:spendwise/core/di/dependencies.dart';
+import 'package:spendwise/core/services/firestore/data/repository/firestore_repository_impl.dart';
 
 class DeleteExpenseUseCase {
   final FirestoreRepositoryImpl repository;

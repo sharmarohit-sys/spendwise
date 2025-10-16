@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:spendwise/constants/string_constants.dart';
-import 'package:spendwise/utils/date_time_callback.dart';
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/constants/string_constants.dart';
+import 'package:spendwise/core/utils/date_time_callback.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
 
 class ExpenseTile extends StatelessWidget {
   const ExpenseTile({super.key, required this.expense, this.onTap});

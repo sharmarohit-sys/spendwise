@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/constants/dimensions.dart';
-import 'package:spendwise/constants/image_constant.dart';
+import 'package:spendwise/core/constants/dimensions.dart';
+import 'package:spendwise/core/constants/image_constant.dart';
 import 'package:spendwise/features/splash/controller/splash_screen_controller.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {

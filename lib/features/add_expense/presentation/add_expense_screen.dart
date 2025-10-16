@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/core/constants/string_constants.dart';
 import 'package:spendwise/features/add_expense/presentation/notifier/add_new_expense_notifer.dart';
-import 'package:spendwise/utils/date_time_callback.dart';
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
-import 'package:spendwise/widget/async_value_widget.dart';
+import 'package:spendwise/core/utils/date_time_callback.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/widgets/async_value_widget.dart';
 // import '../services/firestore_service.dart';
 
 class AddExpenseScreen extends ConsumerStatefulWidget {

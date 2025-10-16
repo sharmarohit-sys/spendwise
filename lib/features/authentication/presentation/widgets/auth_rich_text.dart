@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:spendwise/constants/dimensions.dart';
-import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/core/constants/dimensions.dart';
+import 'package:spendwise/core/constants/string_constants.dart';
 
 class AuthRichText extends StatelessWidget {
   const AuthRichText({super.key, this.onTap, this.isLogin = true});

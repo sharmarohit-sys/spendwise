@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:spendwise/constants/string_constants.dart';
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/constants/string_constants.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
 
 class ExpenseBarChart extends StatelessWidget {
   const ExpenseBarChart({super.key, required this.expenses});

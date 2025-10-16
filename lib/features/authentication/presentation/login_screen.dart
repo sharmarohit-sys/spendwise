@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/components/spend_wise_button.dart';
-import 'package:spendwise/components/spend_wise_text_field.dart';
-import 'package:spendwise/constants/dimensions.dart';
-import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/core/widgets/spend_wise_button.dart';
+import 'package:spendwise/core/widgets/spend_wise_text_field.dart';
+import 'package:spendwise/core/constants/dimensions.dart';
+import 'package:spendwise/core/constants/string_constants.dart';
 import 'package:spendwise/features/authentication/presentation/notifier/login_screen_notifier.dart';
 import 'package:spendwise/features/authentication/presentation/widgets/auth_rich_text.dart';
-import 'package:spendwise/widget/async_value_widget.dart';
+import 'package:spendwise/core/widgets/async_value_widget.dart';
 
 class LoginScreen extends ConsumerWidget {
   LoginScreen({super.key});

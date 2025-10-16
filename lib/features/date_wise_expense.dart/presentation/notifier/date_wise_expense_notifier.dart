@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:spendwise/utils/firestore/domain/usecases/get_expenses_by_date_usecase.dart';
+import 'package:spendwise/core/services/firestore/domain/usecases/get_expenses_by_date_usecase.dart';
 
-import '../../../../utils/firestore/domain/model/expense_model.dart';
+import '../../../../core/services/firestore/domain/model/expense_model.dart';
 
 class DateWiseExpenseNotifier
     extends StateNotifier<AsyncValue<List<ExpenseModel>>> {

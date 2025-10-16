@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/constants/image_constant.dart';
-import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/core/constants/image_constant.dart';
+import 'package:spendwise/core/constants/string_constants.dart';
 import 'package:spendwise/features/home/presentation/notifier/home_notifier.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_bar_chart.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_tile.dart';
-import 'package:spendwise/widget/async_value_widget.dart';
+import 'package:spendwise/core/widgets/async_value_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});

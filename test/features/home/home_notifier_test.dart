@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:spendwise/features/home/presentation/notifier/home_notifier.dart';
-import 'package:spendwise/navigation/routes.dart';
-import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
-import 'package:spendwise/utils/firestore/domain/usecases/get_expenses_by_user_usecase.dart';
+import 'package:spendwise/routes.dart';
+import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/services/firestore/domain/usecases/get_expenses_by_user_usecase.dart';
 
 // Mock repository
 class MockGetExpensesByUserUseCase extends Mock

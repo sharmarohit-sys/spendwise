@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:spendwise/constants/shared_preference.dart';
-import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/navigation/routes.dart';
-import 'package:spendwise/utils/local_storage.dart';
+import 'package:spendwise/core/constants/shared_preference.dart';
+import 'package:spendwise/core/di/dependencies.dart';
+import 'package:spendwise/routes.dart';
+import 'package:spendwise/core/utils/local_storage.dart';
 
 part 'splash_screen_controller.g.dart';
 

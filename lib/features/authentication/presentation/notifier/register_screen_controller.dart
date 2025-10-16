@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/features/authentication/data/repositories/authentication_repository.dart';
 import 'package:spendwise/features/authentication/domain/usecases/register_user_usecase.dart';
-import 'package:spendwise/navigation/routes.dart';
+import 'package:spendwise/routes.dart';
 
 class RegisterScreenController extends StateNotifier<AsyncValue<void>> {
   RegisterScreenController(this._registerUserUseCase)
