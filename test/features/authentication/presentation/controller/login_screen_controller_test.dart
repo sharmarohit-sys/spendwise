@@ -2,48 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/features/authentication/data/authentication_repository.dart';
-import 'package:spendwise/features/authentication/domain/result_model.dart';
-import 'package:spendwise/features/authentication/presentation/controller/login_screen_controller.dart';
+import 'package:spendwise/features/authentication/domain/model/result_model.dart';
+import 'package:spendwise/features/authentication/domain/usecases/login_user_usecase.dart';
+import 'package:spendwise/features/authentication/presentation/notifier/login_screen_notifier.dart';
 import 'package:spendwise/navigation/routes.dart';
 
-class MockAuthenticationRepository extends Mock
-    implements AuthenticationRepository {}
-
-class FakeBuildContext extends Fake implements BuildContext {}
+// ✅ Mock use case
+class MockLoginUserUseCase extends Mock implements LoginUserUseCase {}
 
 void main() {
-  late MockAuthenticationRepository mockAuthRepo;
+  late MockLoginUserUseCase mockLoginUseCase;
 
   setUpAll(() {
-    registerFallbackValue(FakeBuildContext());
+    registerFallbackValue(''); // for any named parameters if needed
   });
 
   setUp(() {
-    mockAuthRepo = MockAuthenticationRepository();
+    mockLoginUseCase = MockLoginUserUseCase();
   });
 
-  testWidgets('loginUserWithEmailAndPassword succeeds and sets state to data', (
-    tester,
-  ) async {
+  testWidgets('login succeeds and navigates to Home', (tester) async {
+    // Arrange
+    when(
+      () => mockLoginUseCase(
+        emailId: any(named: 'emailId'),
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer((_) async => Result.success());
+
     final container = ProviderContainer(
       overrides: [
         loginScreenControllerProvider.overrideWith(
-          (ref) => LoginScreenController(mockAuthRepo),
+          (ref) => LoginScreenNotifier(mockLoginUseCase),
         ),
       ],
     );
 
     final controller = container.read(loginScreenControllerProvider.notifier);
 
-    when(
-      () => mockAuthRepo.loginUserWithEmailAndPassword(
-        emailId: any(named: 'emailId'),
-        password: any(named: 'password'),
-      ),
-    ).thenAnswer((_) async => Result.success());
-
-    // Create a real widget to provide BuildContext
+    // Act: pump widget
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -72,43 +69,63 @@ void main() {
     await tester.tap(find.text('Login'));
     await tester.pumpAndSettle(); // wait for async and navigation
 
-    // Optionally verify navigation result
+    // Assert
     expect(find.text('Home'), findsOneWidget);
 
     final state = container.read(loginScreenControllerProvider);
     expect(state, isA<AsyncData<void>>());
   });
 
-  test('loginUserWithEmailAndPassword fails and sets state to error', () async {
+  testWidgets('login fails and sets state to error', (tester) async {
+    // Arrange
+    final exception = Exception('Login failed');
+    when(
+      () => mockLoginUseCase(
+        emailId: any(named: 'emailId'),
+        password: any(named: 'password'),
+      ),
+    ).thenThrow(exception);
+
     final container = ProviderContainer(
       overrides: [
         loginScreenControllerProvider.overrideWith(
-          (ref) => LoginScreenController(mockAuthRepo),
+          (ref) => LoginScreenNotifier(mockLoginUseCase),
         ),
       ],
     );
 
     final controller = container.read(loginScreenControllerProvider.notifier);
 
-    // Arrange
-    final exception = Exception('Login failed');
-    when(
-      () => mockAuthRepo.loginUserWithEmailAndPassword(
-        emailId: any(named: 'emailId'),
-        password: any(named: 'password'),
+    // Pump a real widget for BuildContext
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp(
+          home: Builder(
+            builder: (context) {
+              return ElevatedButton(
+                onPressed: () {
+                  controller.login(
+                    emailId: 'fail@example.com',
+                    password: 'wrongpassword',
+                    context: context,
+                  );
+                },
+                child: const Text('Login'),
+              );
+            },
+          ),
+        ),
       ),
-    ).thenThrow(exception);
+    );
 
     // Act
-    await controller.login(
-      emailId: 'fail@example.com',
-      password: 'wrongpassword',
-      context: FakeBuildContext(),
-    );
+    await tester.tap(find.text('Login'));
+    await tester.pumpAndSettle();
 
     // Assert
     final state = container.read(loginScreenControllerProvider);
     expect(state.hasError, true);
-    expect(state.error, equals(exception));
+    expect(state.error.toString(), contains('Login failed'));
   });
 }

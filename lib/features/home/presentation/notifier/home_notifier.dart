@@ -4,20 +4,22 @@ import 'package:flutter_riverpod/legacy.dart';
 import 'package:spendwise/dependencies.dart';
 import 'package:spendwise/navigation/routes.dart';
 
-import 'package:spendwise/utils/firestore/data/firestore_repository_impl.dart';
-import 'package:spendwise/utils/firestore/domain/expense_model.dart';
+import 'package:spendwise/utils/firestore/data/repository/firestore_repository_impl.dart';
+import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/utils/firestore/domain/usecases/get_expenses_by_user_usecase.dart';
 
 class HomeNotifier extends StateNotifier<AsyncValue<List<ExpenseModel>>> {
-  HomeNotifier(this._expenseRepository) : super(const AsyncValue.data([])) {
+  HomeNotifier(this._getExpensesByUserUseCase)
+    : super(const AsyncValue.data([])) {
     fetchExpenses();
   }
   // final _expenseRepository = getIt<FirestoreRepositoryImpl>();
-  final FirestoreRepositoryImpl _expenseRepository;
+  final GetExpensesByUserUseCase _getExpensesByUserUseCase;
 
   Future<void> fetchExpenses() async {
     state = const AsyncValue.loading();
     try {
-      final expenses = await _expenseRepository.getExpensesByUser();
+      final expenses = await _getExpensesByUserUseCase.call();
       expenses.sort(
         (left, right) =>
             DateTime.parse(right.date).compareTo(DateTime.parse(left.date)),
@@ -59,5 +61,5 @@ class HomeNotifier extends StateNotifier<AsyncValue<List<ExpenseModel>>> {
 
 final homeControllerProvider =
     StateNotifierProvider<HomeNotifier, AsyncValue<List<ExpenseModel>>>(
-      (ref) => HomeNotifier(getIt<FirestoreRepositoryImpl>()),
+      (ref) => HomeNotifier(ref.read(getExpensesByUserUseCaseProvider)),
     );

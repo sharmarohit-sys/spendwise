@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spendwise/constants/shared_preference.dart';
 import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/utils/firestore/domain/expense_model.dart';
-import 'package:spendwise/utils/firestore/domain/firestore_repository.dart';
+import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/utils/firestore/domain/repository/firestore_repository.dart';
 import 'package:spendwise/utils/local_storage.dart';
 
 class FirestoreRepositoryImpl implements FirestoreRepository {
@@ -99,18 +99,11 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
 
   @override
   Future<List<ExpenseModel>> getExpensesByDate(DateTime date) async {
-    // final start = DateTime(date.year, date.month, date.day);
-    // final end = start.add(const Duration(days: 1));
-
     try {
       final snapshot = await _db
           .collection(collectionName)
           .where('status', isEqualTo: 'valid')
-          //TODO: update the where filer query
-          // .where('date', isGreaterThanOrEqualTo: start)
-          // .where('date', isLessThan: end)
           .get();
-
       return snapshot.docs.map((e) => ExpenseModel.fromJson(e.data())).toList();
     } catch (e) {
       log(e.toString());

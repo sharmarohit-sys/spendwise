@@ -1,24 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:spendwise/features/add_expense/presentation/notifier/add_new_expense_notifer.dart';
-import 'package:spendwise/utils/firestore/data/firestore_repository_impl.dart';
-import 'package:spendwise/utils/firestore/domain/expense_model.dart';
+import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/utils/firestore/domain/usecases/add_expense_usecase.dart';
+import 'package:spendwise/utils/firestore/domain/usecases/delete_expense_usecase.dart';
+import 'package:spendwise/utils/firestore/domain/usecases/edit_expense_usecase.dart';
 
-// Mock repository
-class MockFirestoreRepositoryImpl extends Mock
-    implements FirestoreRepositoryImpl {}
+// ✅ Mock use cases
+class MockAddExpenseUseCase extends Mock implements AddExpenseUseCase {}
+
+class MockEditExpenseUseCase extends Mock implements EditExpenseUseCase {}
+
+class MockDeleteExpenseUseCase extends Mock implements DeleteExpenseUseCase {}
 
 // Fake BuildContext for non-widget tests
 class MockBuildContext extends Mock implements BuildContext {}
 
 void main() {
-  late MockFirestoreRepositoryImpl mockRepository;
+  late MockAddExpenseUseCase mockAddUseCase;
+  late MockEditExpenseUseCase mockEditUseCase;
+  late MockDeleteExpenseUseCase mockDeleteUseCase;
   late AddNewExpenseNotifier notifier;
 
   setUp(() {
-    mockRepository = MockFirestoreRepositoryImpl();
-    notifier = AddNewExpenseNotifier(mockRepository);
+    mockAddUseCase = MockAddExpenseUseCase();
+    mockEditUseCase = MockEditExpenseUseCase();
+    mockDeleteUseCase = MockDeleteExpenseUseCase();
+
+    notifier = AddNewExpenseNotifier(
+      addExpenseUseCase: mockAddUseCase,
+      editExpenseUseCase: mockEditUseCase,
+      deleteExpenseUseCase: mockDeleteUseCase,
+    );
   });
 
   final testExpense = ExpenseModel(
@@ -33,10 +48,9 @@ void main() {
   group('AddNewExpenseNotifier', () {
     test('addExpense failure sets error state', () async {
       when(
-        () => mockRepository.addExpense(expense: testExpense),
+        () => mockAddUseCase.call(expense: testExpense),
       ).thenThrow(Exception('Failed'));
 
-      // Use a fake context since we don't need UI for state test
       final context = MockBuildContext();
 
       await notifier.addExpense(context, expense: testExpense);
@@ -46,7 +60,7 @@ void main() {
 
     test('editExpense failure sets error state', () async {
       when(
-        () => mockRepository.editExpense(expenseId: '1', expense: testExpense),
+        () => mockEditUseCase.call(expenseId: '1', expense: testExpense),
       ).thenThrow(Exception('Failed'));
 
       final context = MockBuildContext();
@@ -58,13 +72,50 @@ void main() {
 
     test('deleteExpense failure sets error state', () async {
       when(
-        () => mockRepository.deleteExpense(expenseId: '1'),
+        () => mockDeleteUseCase.call(expenseId: '1'),
       ).thenThrow(Exception('Failed'));
 
       final context = MockBuildContext();
 
       await notifier.deleteExpense(context, expenseId: '1');
+
       expect(notifier.state.error, isA<Exception>());
+    });
+
+    test('addExpense success sets state to data', () async {
+      when(
+        () => mockAddUseCase.call(expense: testExpense),
+      ).thenAnswer((_) async => Future.value());
+
+      final context = MockBuildContext();
+
+      await notifier.addExpense(context, expense: testExpense);
+
+      expect(notifier.state, isA<AsyncData<ExpenseModel?>>());
+    });
+
+    test('editExpense success sets state to data', () async {
+      when(
+        () => mockEditUseCase.call(expenseId: '1', expense: testExpense),
+      ).thenAnswer((_) async => Future.value());
+
+      final context = MockBuildContext();
+
+      await notifier.editExpense(context, expense: testExpense, expenseId: '1');
+
+      expect(notifier.state, isA<AsyncData<ExpenseModel?>>());
+    });
+
+    test('deleteExpense success sets state to data', () async {
+      when(
+        () => mockDeleteUseCase.call(expenseId: '1'),
+      ).thenAnswer((_) async => Future.value());
+
+      final context = MockBuildContext();
+
+      await notifier.deleteExpense(context, expenseId: '1');
+
+      expect(notifier.state, isA<AsyncData<ExpenseModel?>>());
     });
   });
 }

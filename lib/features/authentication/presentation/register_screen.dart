@@ -4,7 +4,7 @@ import 'package:spendwise/components/spend_wise_button.dart';
 import 'package:spendwise/components/spend_wise_text_field.dart';
 import 'package:spendwise/constants/dimensions.dart';
 import 'package:spendwise/constants/string_constants.dart';
-import 'package:spendwise/features/authentication/presentation/controller/register_screen_controller.dart';
+import 'package:spendwise/features/authentication/presentation/notifier/register_screen_controller.dart';
 import 'package:spendwise/features/authentication/presentation/widgets/auth_rich_text.dart';
 
 class RegisterScreen extends ConsumerWidget {

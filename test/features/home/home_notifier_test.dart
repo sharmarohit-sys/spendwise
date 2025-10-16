@@ -4,23 +4,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:spendwise/features/home/presentation/notifier/home_notifier.dart';
 import 'package:spendwise/navigation/routes.dart';
-import 'package:spendwise/utils/firestore/data/firestore_repository_impl.dart';
-import 'package:spendwise/utils/firestore/domain/expense_model.dart';
+import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/utils/firestore/domain/usecases/get_expenses_by_user_usecase.dart';
 
 // Mock repository
-class MockFirestoreRepositoryImpl extends Mock
-    implements FirestoreRepositoryImpl {}
+class MockGetExpensesByUserUseCase extends Mock
+    implements GetExpensesByUserUseCase {}
 
 // Mock NavigatorObserver to test navigation
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
-  late MockFirestoreRepositoryImpl mockRepository;
+  late MockGetExpensesByUserUseCase mockUseCase;
   late HomeNotifier controller;
 
   setUp(() {
-    mockRepository = MockFirestoreRepositoryImpl();
-    controller = HomeNotifier(mockRepository);
+    mockUseCase = MockGetExpensesByUserUseCase();
+    controller = HomeNotifier(mockUseCase);
   });
 
   final expense1 = ExpenseModel(
@@ -53,7 +53,7 @@ void main() {
   group('HomeControllerNew', () {
     test('fetchExpenses updates state with sorted expenses', () async {
       when(
-        () => mockRepository.getExpensesByUser(),
+        () => mockUseCase.call(),
       ).thenAnswer((_) async => [expense1, expense2, expense3]);
 
       await controller.fetchExpenses();
@@ -65,9 +65,7 @@ void main() {
     });
 
     test('fetchExpenses sets error state on exception', () async {
-      when(
-        () => mockRepository.getExpensesByUser(),
-      ).thenThrow(Exception('Failed to fetch'));
+      when(() => mockUseCase.call()).thenThrow(Exception('Failed to fetch'));
 
       await controller.fetchExpenses();
 
@@ -99,9 +97,7 @@ void main() {
         ),
       );
 
-      when(
-        () => mockRepository.getExpensesByUser(),
-      ).thenAnswer((_) async => [expense1]);
+      when(() => mockUseCase.call()).thenAnswer((_) async => [expense1]);
 
       // Mock Navigator.pushNamed to return a non-null result
       await tester.tap(find.byType(ElevatedButton));

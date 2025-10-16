@@ -1,22 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/utils/firestore/data/firestore_repository_impl.dart';
-import 'package:spendwise/utils/firestore/domain/expense_model.dart';
+import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/utils/firestore/domain/usecases/get_invalid_expenses_usecase.dart';
 
 class InvalidExpenseNotifier
     extends StateNotifier<AsyncValue<List<ExpenseModel>>> {
-  InvalidExpenseNotifier(this._expenseRepository)
+  InvalidExpenseNotifier(this._getInvalidExpensesUseCase)
     : super(const AsyncValue.data([])) {
     fetchAllInvalidExpense();
   }
   // final _expenseRepository = getIt<FirestoreRepositoryImpl>();
-  final FirestoreRepositoryImpl _expenseRepository;
+  final GetInvalidExpensesUseCase _getInvalidExpensesUseCase;
 
   Future<void> fetchAllInvalidExpense() async {
     state = const AsyncValue.loading();
     try {
-      final expenses = await _expenseRepository.getInvalidExpenses();
+      final expenses = await _getInvalidExpensesUseCase.call();
       state = AsyncValue.data(expenses);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -29,6 +28,7 @@ final invalidExpenseControllerProvider =
       InvalidExpenseNotifier,
       AsyncValue<List<ExpenseModel>>
     >((ref) {
-      final expenseRepository = getIt<FirestoreRepositoryImpl>();
-      return InvalidExpenseNotifier(expenseRepository);
+      return InvalidExpenseNotifier(
+        ref.read(getInvalidExpensesUseCaseProvider),
+      );
     });

@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/features/authentication/data/authentication_repository.dart';
+import 'package:spendwise/features/authentication/data/repositories/authentication_repository.dart';
+import 'package:spendwise/features/authentication/domain/usecases/register_user_usecase.dart';
 import 'package:spendwise/navigation/routes.dart';
 
 class RegisterScreenController extends StateNotifier<AsyncValue<void>> {
-  RegisterScreenController(this.authenticationRepository)
+  RegisterScreenController(this._registerUserUseCase)
     : super(const AsyncValue.data(null));
 
-  final AuthenticationRepository authenticationRepository;
+  final RegisterUserUseCase _registerUserUseCase;
 
   Future<bool> registerUser(
     BuildContext context, {
@@ -19,7 +20,7 @@ class RegisterScreenController extends StateNotifier<AsyncValue<void>> {
   }) async {
     state = const AsyncValue.loading();
     try {
-      final result = await authenticationRepository.registerUser(
+      final result = await _registerUserUseCase.call(
         emailId: emailId,
         password: password,
         userName: userName,
@@ -52,5 +53,5 @@ final registerScreenControllerProvider =
       RegisterScreenController,
       AsyncValue<void>
     >((ref) {
-      return RegisterScreenController(getIt<AuthenticationRepository>());
+      return RegisterScreenController(ref.read(registerUseCaseProvider));
     });

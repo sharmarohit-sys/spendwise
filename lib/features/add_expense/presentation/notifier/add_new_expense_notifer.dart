@@ -2,14 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:spendwise/dependencies.dart';
-import 'package:spendwise/utils/firestore/data/firestore_repository_impl.dart';
-import 'package:spendwise/utils/firestore/domain/expense_model.dart';
+import 'package:spendwise/utils/firestore/data/repository/firestore_repository_impl.dart';
+import 'package:spendwise/utils/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/utils/firestore/domain/usecases/add_expense_usecase.dart';
+import 'package:spendwise/utils/firestore/domain/usecases/delete_expense_usecase.dart';
+import 'package:spendwise/utils/firestore/domain/usecases/edit_expense_usecase.dart';
 
 class AddNewExpenseNotifier extends StateNotifier<AsyncValue<ExpenseModel?>> {
-  AddNewExpenseNotifier(this._expenseRepository)
-    : super(const AsyncValue.data(null));
+  AddNewExpenseNotifier({
+    required this.addExpenseUseCase,
+    required this.editExpenseUseCase,
+    required this.deleteExpenseUseCase,
+  }) : super(const AsyncValue.data(null));
 
-  final FirestoreRepositoryImpl _expenseRepository;
+  final AddExpenseUseCase addExpenseUseCase;
+  final EditExpenseUseCase editExpenseUseCase;
+  final DeleteExpenseUseCase deleteExpenseUseCase;
 
   Future<void> addExpense(
     BuildContext context, {
@@ -18,7 +26,7 @@ class AddNewExpenseNotifier extends StateNotifier<AsyncValue<ExpenseModel?>> {
   }) async {
     state = const AsyncValue.loading();
     try {
-      await _expenseRepository.addExpense(expense: expense);
+      await addExpenseUseCase.call(expense: expense);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -41,10 +49,7 @@ class AddNewExpenseNotifier extends StateNotifier<AsyncValue<ExpenseModel?>> {
   }) async {
     state = const AsyncValue.loading();
     try {
-      await _expenseRepository.editExpense(
-        expenseId: expenseId,
-        expense: expense,
-      );
+      await editExpenseUseCase.call(expenseId: expenseId, expense: expense);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -65,7 +70,7 @@ class AddNewExpenseNotifier extends StateNotifier<AsyncValue<ExpenseModel?>> {
   }) async {
     state = const AsyncValue.loading();
     try {
-      await _expenseRepository.deleteExpense(expenseId: expenseId);
+      await deleteExpenseUseCase.call(expenseId: expenseId);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -86,6 +91,12 @@ final addExpenseControllerProvider =
       AddNewExpenseNotifier,
       AsyncValue<ExpenseModel?>
     >((ref) {
-      final expenseRepository = getIt<FirestoreRepositoryImpl>();
-      return AddNewExpenseNotifier(expenseRepository);
+      final addExpense = ref.read(addExpenseUseCaseProvider);
+      final editExpense = ref.read(editExpenseUseCaseProvider);
+      final deleteExpense = ref.read(deleteExpenseUseCaseProvider);
+      return AddNewExpenseNotifier(
+        addExpenseUseCase: addExpense,
+        editExpenseUseCase: editExpense,
+        deleteExpenseUseCase: deleteExpense,
+      );
     });
