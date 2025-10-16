@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spendwise/utils/date_time_callback.dart';
 
 class DateSelector extends StatefulWidget {
   final void Function(DateTime)? onSelected;
@@ -54,7 +55,8 @@ class _DateSelectorState extends State<DateSelector> {
                 const Icon(Icons.calendar_month),
                 const SizedBox(width: 10),
                 Text(
-                  "${value.year}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}",
+                  DateTimeCallback.getTimeInString(value),
+
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

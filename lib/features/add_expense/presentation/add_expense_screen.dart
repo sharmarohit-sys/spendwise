@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/features/add_expense/presentation/controller/add_new_expense_notifer_new.dart';
+import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/features/add_expense/presentation/notifier/add_new_expense_notifer.dart';
+import 'package:spendwise/utils/date_time_callback.dart';
 import 'package:spendwise/utils/firestore/domain/expense_model.dart';
 import 'package:spendwise/widget/async_value_widget.dart';
 // import '../services/firestore_service.dart';
@@ -71,7 +73,9 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.expenseModel != null ? 'Edit Expense' : 'Add Expense',
+          widget.expenseModel != null
+              ? StringConstants.editExpense
+              : StringConstants.addExpense,
         ),
         actions: [
           if (widget.expenseModel != null)
@@ -100,20 +104,21 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                     maxLength: 10,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: const InputDecoration(
-                      labelText: 'Amount',
+                      labelText: StringConstants.amount,
                       counterText: '',
                       prefixIcon: Icon(Icons.attach_money),
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
-                    validator: (v) =>
-                        v == null || v.isEmpty ? 'Enter an amount' : null,
+                    validator: (v) => v == null || v.isEmpty
+                        ? StringConstants.enterAmount
+                        : null,
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
                     value: _category,
                     decoration: const InputDecoration(
-                      labelText: 'Category',
+                      labelText: StringConstants.category,
                       prefixIcon: Icon(Icons.category),
                       border: OutlineInputBorder(),
                     ),
@@ -121,7 +126,8 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),
                     onChanged: (v) => _category = v,
-                    validator: (v) => v == null ? 'Select a category' : null,
+                    validator: (v) =>
+                        v == null ? StringConstants.selectCategory : null,
                   ),
                   const SizedBox(height: 16),
                   GestureDetector(
@@ -150,9 +156,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                         children: [
                           const Icon(Icons.calendar_today_outlined),
                           const SizedBox(width: 16),
-                          Text(
-                            '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                          ),
+                          Text(DateTimeCallback.getTimeInString(_selectedDate)),
                         ],
                       ),
                     ),
@@ -161,7 +165,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                   TextFormField(
                     controller: _noteCtrl,
                     decoration: const InputDecoration(
-                      labelText: 'Note (optional)',
+                      labelText: StringConstants.noteOptional,
                       prefixIcon: Icon(Icons.note_alt_outlined),
                       border: OutlineInputBorder(),
                     ),
@@ -185,7 +189,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                       ),
                     ),
                     child: const Text(
-                      'Save Expense',
+                      StringConstants.saveExpense,
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -217,7 +221,7 @@ class MarkInvalidExpense extends StatelessWidget {
         return CheckboxListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           value: value == 'invalid',
-          title: const Text('Mark as invalid'),
+          title: const Text(StringConstants.markInvalid),
           onChanged: (val) {
             statusNotifier.value = val == true ? 'invalid' : 'valid';
             onStatusChanged?.call(statusNotifier.value);

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/utils/date_time_callback.dart';
 import 'package:spendwise/utils/firestore/domain/expense_model.dart';
 
 class ExpenseTile extends StatelessWidget {
@@ -24,7 +26,8 @@ class ExpenseTile extends StatelessWidget {
         ),
         title: Text(expense.category),
         subtitle: Text(
-          '${date.day}/${date.month}/${date.year}',
+          DateTimeCallback.getTimeInString(date),
+          // '${date.day}/${date.month}/${date.year}',
           style: const TextStyle(color: Colors.grey),
         ),
         trailing: Text(
@@ -38,13 +41,13 @@ class ExpenseTile extends StatelessWidget {
 
   IconData _getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
-      case 'food':
+      case StringConstants.food:
         return Icons.restaurant;
-      case 'travel':
+      case StringConstants.travel:
         return Icons.flight;
-      case 'shopping':
+      case StringConstants.shopping:
         return Icons.shopping_bag;
-      case 'coffee':
+      case StringConstants.coffee:
         return Icons.local_cafe;
       default:
         return Icons.attach_money;
@@ -53,13 +56,13 @@ class ExpenseTile extends StatelessWidget {
 
   Color _getCategoryColor(String category) {
     switch (category.toLowerCase()) {
-      case 'food':
+      case StringConstants.food:
         return Colors.blue;
-      case 'travel':
+      case StringConstants.travel:
         return Colors.deepOrange;
-      case 'shopping':
+      case StringConstants.shopping:
         return Colors.orangeAccent;
-      case 'coffee':
+      case StringConstants.coffee:
         return Colors.purple;
       default:
         return Colors.green;

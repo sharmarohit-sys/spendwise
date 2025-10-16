@@ -8,14 +8,11 @@ import 'package:spendwise/utils/firestore/domain/firestore_repository.dart';
 import 'package:spendwise/utils/local_storage.dart';
 
 class FirestoreRepositoryImpl implements FirestoreRepository {
-  FirestoreRepositoryImpl() {
-    final email = _loalDb.readData(key: SharedPreference.emailIdKey);
-    collectionName = 'expenses$email';
-  }
   final _db = FirebaseFirestore.instance;
   final _loalDb = getIt<LocalStorage>();
 
   late String collectionName;
+  String? email;
 
   @override
   Future<bool> addUser({
@@ -82,6 +79,10 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
 
   @override
   Future<List<ExpenseModel>> getExpensesByUser() async {
+    if (email == null) {
+      email = _loalDb.readData(key: SharedPreference.emailIdKey);
+      collectionName = 'expenses$email';
+    }
     try {
       final snapshot = await _db
           .collection(collectionName)
@@ -98,8 +99,8 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
 
   @override
   Future<List<ExpenseModel>> getExpensesByDate(DateTime date) async {
-    final start = DateTime(date.year, date.month, date.day);
-    final end = start.add(const Duration(days: 1));
+    // final start = DateTime(date.year, date.month, date.day);
+    // final end = start.add(const Duration(days: 1));
 
     try {
       final snapshot = await _db

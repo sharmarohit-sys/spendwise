@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/features/date_wise_expense.dart/controller/date_wise_notifier_new.dart';
+import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/features/date_wise_expense.dart/presentation/notifier/date_wise_expense_notifier.dart';
 import 'package:spendwise/features/date_wise_expense.dart/presentation/widgets/date_selector.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_bar_chart.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_tile.dart';
@@ -21,7 +22,7 @@ class _DateWiseExpenseState extends ConsumerState<DateWiseExpense> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text('Date Wise Expenses'),
+        title: const Text(StringConstants.dateWiseExpense),
       ),
       body: Column(
         children: [
@@ -46,7 +47,7 @@ class _DateWiseExpenseState extends ConsumerState<DateWiseExpense> {
                           color: Colors.blueGrey,
                           size: 150,
                         ),
-                        Text('No data available'),
+                        Text(StringConstants.noDataAvailable),
                         Spacer(),
                       ],
                     ),

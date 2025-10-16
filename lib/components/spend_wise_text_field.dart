@@ -7,15 +7,18 @@ class SpendWiseTextField extends StatelessWidget {
     this.hintText,
     this.prefixIcon,
     this.controller,
+    this.validator,
   });
   final String? hintText;
   final Widget? prefixIcon;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: controller,
+      validator: validator,
       decoration: InputDecoration(
         prefixIcon: prefixIcon,
         hintText: hintText,

@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:spendwise/constants/string_constants.dart';
 import 'package:spendwise/utils/firestore/domain/expense_model.dart';
 
 class ExpenseBarChart extends StatelessWidget {
@@ -54,13 +55,13 @@ class ExpenseBarChart extends StatelessWidget {
 
   Color _getCategoryColor(String category) {
     switch (category.toLowerCase()) {
-      case 'food':
+      case StringConstants.food:
         return Colors.blue;
-      case 'travel':
+      case StringConstants.travel:
         return Colors.deepOrange;
-      case 'shopping':
+      case StringConstants.shopping:
         return Colors.orangeAccent;
-      case 'coffee':
+      case StringConstants.coffee:
         return Colors.purple;
       default:
         return Colors.green;

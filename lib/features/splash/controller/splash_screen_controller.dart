@@ -24,7 +24,7 @@ class SplashScreenController extends _$SplashScreenController {
         }
       } else {
         if (context.mounted) {
-          Navigator.pushNamed(context, Routes.loginScreen);
+          Navigator.pushReplacementNamed(context, Routes.loginScreen);
         }
       }
     });

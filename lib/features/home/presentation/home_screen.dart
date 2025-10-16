@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/features/home/presentation/controller/home_controller_new.dart';
+import 'package:spendwise/constants/image_constant.dart';
+import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/features/home/presentation/notifier/home_notifier.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_bar_chart.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_tile.dart';
 import 'package:spendwise/widget/async_value_widget.dart';
@@ -15,7 +17,6 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final controller = ref.watch(homeControllerProvider);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -28,13 +29,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         centerTitle: false,
         title: Row(
           children: [
-            Icon(
-              Icons.savings_rounded,
-              // size: Dimensions.padding * 30,
-              color: colorScheme.primary,
-            ),
+            Image.asset(ImageConstant.logo, height: 30),
             const SizedBox(width: 16),
-            const Text('All Expenses'),
+            const Text(StringConstants.allExpense),
             const Spacer(),
             IconButton(
               onPressed: () => ref
@@ -52,68 +49,76 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         automaticallyImplyLeading: false,
       ),
-      body: AsyncValueWidget(
-        value: controller,
-        data: (data) {
-          if (data.isEmpty) {
-            return const Center(
+      body: RefreshIndicator(
+        onRefresh: () {
+          return ref.read(homeControllerProvider.notifier).fetchExpenses();
+        },
+        child: AsyncValueWidget(
+          value: controller,
+          data: (data) {
+            if (data.isEmpty) {
+              return const Center(
+                child: Column(
+                  children: [
+                    Spacer(),
+                    Icon(
+                      Icons.receipt_long_outlined,
+                      color: Colors.blueGrey,
+                      size: 150,
+                    ),
+                    Text(StringConstants.noDataAvailable),
+                    Spacer(),
+                  ],
+                ),
+              );
+            }
+            final totalAmount = data.fold<double>(
+              0,
+              (previousValue, element) => previousValue + element.amount,
+            );
+
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  Spacer(),
-                  Icon(
-                    Icons.receipt_long_outlined,
-                    color: Colors.blueGrey,
-                    size: 150,
+                  ExpenseBarChart(expenses: data),
+                  const SizedBox(height: 16),
+
+                  Text(
+                    '\$${totalAmount.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  Text('No Expenses'),
-                  Spacer(),
+                  const SizedBox(height: 16),
+
+                  // Expense List
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        final expense = data[index];
+
+                        return ExpenseTile(
+                          expense: expense,
+                          onTap: () {
+                            ref
+                                .read(homeControllerProvider.notifier)
+                                .navigateToAddExpense(
+                                  context,
+                                  expense: expense,
+                                );
+                          },
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             );
-          }
-          final totalAmount = data.fold<double>(
-            0,
-            (previousValue, element) => previousValue + element.amount,
-          );
-
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                ExpenseBarChart(expenses: data),
-                const SizedBox(height: 16),
-
-                Text(
-                  '\$${totalAmount.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Expense List
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      final expense = data[index];
-
-                      return ExpenseTile(
-                        expense: expense,
-                        onTap: () {
-                          ref
-                              .read(homeControllerProvider.notifier)
-                              .navigateToAddExpense(context, expense: expense);
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
+          },
+        ),
       ),
     );
   }

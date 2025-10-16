@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:spendwise/features/invalid_expense/presentation/controller/invalid_expense_notifier_new.dart';
+import 'package:spendwise/constants/string_constants.dart';
+import 'package:spendwise/features/invalid_expense/presentation/notifier/invalid_expense_notifier_new.dart';
 import 'package:spendwise/widget/async_value_widget.dart';
 
 class InvalidExpenseScreen extends ConsumerStatefulWidget {
@@ -16,7 +17,7 @@ class _InvalidExpenseScreenState extends ConsumerState<InvalidExpenseScreen> {
   Widget build(BuildContext context) {
     final controller = ref.watch(invalidExpenseControllerProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Invalid Expenses')),
+      appBar: AppBar(title: const Text(StringConstants.invalidExpense)),
       body: AsyncValueWidget(
         value: controller,
         data: (data) {
@@ -30,7 +31,7 @@ class _InvalidExpenseScreenState extends ConsumerState<InvalidExpenseScreen> {
                     color: Colors.blueGrey,
                     size: 150,
                   ),
-                  Text('No data available'),
+                  Text(StringConstants.noDataAvailable),
                   Spacer(),
                 ],
               ),
@@ -77,7 +78,7 @@ class _InvalidExpenseScreenState extends ConsumerState<InvalidExpenseScreen> {
                     color: Colors.red.shade100,
                   ),
                   child: const Text(
-                    'Invalid',
+                    StringConstants.invalid,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
@@ -95,13 +96,13 @@ class _InvalidExpenseScreenState extends ConsumerState<InvalidExpenseScreen> {
 
   IconData _getCategoryIcon(String category) {
     switch (category.toLowerCase()) {
-      case 'food':
+      case StringConstants.food:
         return Icons.restaurant;
-      case 'travel':
+      case StringConstants.travel:
         return Icons.flight;
-      case 'shopping':
+      case StringConstants.shopping:
         return Icons.shopping_bag;
-      case 'coffee':
+      case StringConstants.coffee:
         return Icons.local_cafe;
       default:
         return Icons.attach_money;
@@ -110,13 +111,13 @@ class _InvalidExpenseScreenState extends ConsumerState<InvalidExpenseScreen> {
 
   Color _getCategoryColor(String category) {
     switch (category.toLowerCase()) {
-      case 'food':
+      case StringConstants.food:
         return Colors.blue;
-      case 'travel':
+      case StringConstants.travel:
         return Colors.deepOrange;
-      case 'shopping':
+      case StringConstants.shopping:
         return Colors.orangeAccent;
-      case 'coffee':
+      case StringConstants.coffee:
         return Colors.purple;
       default:
         return Colors.green;
