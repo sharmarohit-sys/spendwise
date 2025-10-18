@@ -8,7 +8,35 @@ class GetExpensesByDateUseCase {
   final FirestoreRepositoryImpl repository;
 
   Future<List<ExpenseModel>> call(DateTime date) async {
-    return repository.getExpensesByDate(date);
+    final expenses = await repository.getExpensesByDate(date);
+    final List<ExpenseModel> expensesForDate = filterExpensesByDate(
+      expenses,
+      date,
+    );
+    return expensesForDate;
+  }
+
+  List<ExpenseModel> filterExpensesByDate(
+    List<ExpenseModel> expenses,
+    DateTime? start,
+  ) {
+    final DateTime? end = start?.add(const Duration(days: 1));
+    final filtered = expenses.where((expense) {
+      final expenseDate = DateTime.parse(
+        expense.date,
+      ); // ISO string to DateTime
+      if (start != null && expenseDate.isBefore(start)) return false;
+      if (end != null && expenseDate.isAfter(end)) return false;
+      return true;
+    }).toList();
+
+    // Sort by date descending (latest first)
+    filtered.sort(
+      (left, right) =>
+          DateTime.parse(right.date).compareTo(DateTime.parse(left.date)),
+    );
+
+    return filtered;
   }
 }
 

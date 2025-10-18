@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:spendwise/features/authentication/domain/usecases/login_user_usecase.dart';
-import 'package:spendwise/routes.dart';
 
 class LoginScreenNotifier extends StateNotifier<AsyncValue<void>> {
   LoginScreenNotifier(this._loginUserUseCase)
@@ -13,7 +11,6 @@ class LoginScreenNotifier extends StateNotifier<AsyncValue<void>> {
   Future<void> login({
     required String emailId,
     required String password,
-    required BuildContext context,
   }) async {
     state = const AsyncValue.loading();
     try {
@@ -24,7 +21,7 @@ class LoginScreenNotifier extends StateNotifier<AsyncValue<void>> {
 
       if (result.isSuccess) {
         state = const AsyncValue.data(null);
-        if (context.mounted) Navigator.pushNamed(context, Routes.homeScreen);
+        //
       } else {
         state = AsyncValue.error(
           result.error ?? 'Unable to login',
@@ -34,10 +31,6 @@ class LoginScreenNotifier extends StateNotifier<AsyncValue<void>> {
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
-  }
-
-  void navigateToRegisterScreen(BuildContext context) {
-    Navigator.pushNamed(context, Routes.registerScreen);
   }
 }
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spendwise/core/constants/string_constants.dart';
+import 'package:spendwise/core/utils/category_helper.dart';
 import 'package:spendwise/core/utils/date_time_callback.dart';
 import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
 
@@ -20,9 +20,12 @@ class ExpenseTile extends StatelessWidget {
           width: 40,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: _getCategoryColor(expense.category),
+            color: CategoryHelper.color(expense.category),
           ),
-          child: Icon(_getCategoryIcon(expense.category), color: Colors.white),
+          child: Icon(
+            CategoryHelper.icon(expense.category),
+            color: Colors.white,
+          ),
         ),
         title: Text(expense.category),
         subtitle: Text(
@@ -37,35 +40,5 @@ class ExpenseTile extends StatelessWidget {
         onTap: onTap,
       ),
     );
-  }
-
-  IconData _getCategoryIcon(String category) {
-    switch (category.toLowerCase()) {
-      case StringConstants.food:
-        return Icons.restaurant;
-      case StringConstants.travel:
-        return Icons.flight;
-      case StringConstants.shopping:
-        return Icons.shopping_bag;
-      case StringConstants.coffee:
-        return Icons.local_cafe;
-      default:
-        return Icons.attach_money;
-    }
-  }
-
-  Color _getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case StringConstants.food:
-        return Colors.blue;
-      case StringConstants.travel:
-        return Colors.deepOrange;
-      case StringConstants.shopping:
-        return Colors.orangeAccent;
-      case StringConstants.coffee:
-        return Colors.purple;
-      default:
-        return Colors.green;
-    }
   }
 }

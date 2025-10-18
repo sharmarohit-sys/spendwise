@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:spendwise/core/utils/date_time_callback.dart';
 
 class DateSelector extends StatefulWidget {
-  final void Function(DateTime)? onSelected;
-
   const DateSelector({super.key, this.onSelected});
+  final void Function(DateTime)? onSelected;
 
   @override
   State<DateSelector> createState() => _DateSelectorState();
@@ -56,7 +55,6 @@ class _DateSelectorState extends State<DateSelector> {
                 const SizedBox(width: 10),
                 Text(
                   DateTimeCallback.getTimeInString(value),
-
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

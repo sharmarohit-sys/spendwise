@@ -118,7 +118,7 @@ class AuthenticationRepository implements AuthenticationRepositoryBase {
       );
 
       if (cred.user != null) {
-        saveUserDataToLocalStorage(
+        await saveUserDataToLocalStorage(
           userName: userName,
           emailId: emailId,
           uId: cred.user?.uid ?? '',
@@ -142,7 +142,7 @@ class AuthenticationRepository implements AuthenticationRepositoryBase {
         password: password,
       );
       if (cred.user != null) {
-        saveUserDataToLocalStorage(
+        await saveUserDataToLocalStorage(
           userName: cred.user?.displayName ?? '',
           emailId: emailId,
           uId: cred.user?.uid ?? '',
@@ -155,19 +155,28 @@ class AuthenticationRepository implements AuthenticationRepositoryBase {
     }
   }
 
-  void saveUserDataToLocalStorage({
+  Future<void> saveUserDataToLocalStorage({
     required String userName,
     required String emailId,
     required String uId,
-  }) {
-    firestoreExpenseRepository.addUser(
+  }) async {
+    await firestoreExpenseRepository.addUser(
       name: userName,
       email: emailId,
       uId: uId,
     );
-    localStorage.saveData(key: SharedPreference.userNameKey, value: userName);
-    localStorage.saveData(key: SharedPreference.emailIdKey, value: emailId);
-    localStorage.saveData(key: SharedPreference.uIdKey, value: uId);
-    localStorage.saveData(key: SharedPreference.isLoginKey, value: 'True');
+    await localStorage.saveData(
+      key: SharedPreference.userNameKey,
+      value: userName,
+    );
+    await localStorage.saveData(
+      key: SharedPreference.emailIdKey,
+      value: emailId,
+    );
+    await localStorage.saveData(key: SharedPreference.uIdKey, value: uId);
+    await localStorage.saveData(
+      key: SharedPreference.isLoginKey,
+      value: 'True',
+    );
   }
 }

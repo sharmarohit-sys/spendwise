@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:spendwise/core/di/dependencies.dart';
-import 'package:spendwise/core/services/firestore/data/repository/firestore_repository_impl.dart';
 import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
 import 'package:spendwise/core/services/firestore/domain/usecases/add_expense_usecase.dart';
 import 'package:spendwise/core/services/firestore/domain/usecases/delete_expense_usecase.dart';
 import 'package:spendwise/core/services/firestore/domain/usecases/edit_expense_usecase.dart';
+import 'package:spendwise/core/utils/spendwise_toast.dart';
 
 class AddNewExpenseNotifier extends StateNotifier<AsyncValue<ExpenseModel?>> {
   AddNewExpenseNotifier({
@@ -19,66 +17,39 @@ class AddNewExpenseNotifier extends StateNotifier<AsyncValue<ExpenseModel?>> {
   final EditExpenseUseCase editExpenseUseCase;
   final DeleteExpenseUseCase deleteExpenseUseCase;
 
-  Future<void> addExpense(
-    BuildContext context, {
-    required ExpenseModel expense,
-    required,
-  }) async {
+  Future<void> addExpense({required ExpenseModel expense}) async {
     state = const AsyncValue.loading();
     try {
       await addExpenseUseCase.call(expense: expense);
-
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Expense added successfully')),
-        );
-
-        Navigator.pop(context, true);
-      }
       state = const AsyncValue.data(null);
+      SpendWiseToast.success('Expense Added successfully');
     } catch (e, st) {
       // On error, update the state to error
       state = AsyncValue.error(e, st);
     }
   }
 
-  Future<void> editExpense(
-    BuildContext context, {
+  Future<void> editExpense({
     required ExpenseModel expense,
     required String expenseId,
   }) async {
     state = const AsyncValue.loading();
     try {
       await editExpenseUseCase.call(expenseId: expenseId, expense: expense);
-
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Expense Updated successfully')),
-        );
-        Navigator.pop(context, true);
-      }
       state = const AsyncValue.data(null);
+      SpendWiseToast.success('Expense Updated successfully');
     } catch (e, st) {
-      // On error, update the state to error
       state = AsyncValue.error(e, st);
+      SpendWiseToast.error(e.toString());
     }
   }
 
-  Future<void> deleteExpense(
-    BuildContext context, {
-    required String expenseId,
-  }) async {
+  Future<void> deleteExpense({required String expenseId}) async {
     state = const AsyncValue.loading();
     try {
       await deleteExpenseUseCase.call(expenseId: expenseId);
-
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Expense Deleted successfully')),
-        );
-        Navigator.pop(context, true);
-      }
       state = const AsyncValue.data(null);
+      SpendWiseToast.success('Expense Deleted successfully');
     } catch (e, st) {
       // On error, update the state to error
       state = AsyncValue.error(e, st);

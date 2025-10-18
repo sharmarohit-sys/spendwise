@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/core/constants/string_constants.dart';
+import 'package:spendwise/core/widgets/spend_wise_button.dart';
+import 'package:spendwise/features/add_expense/presentation/widgets/mark_invalid_expense.dart';
 import 'package:spendwise/features/add_expense/presentation/notifier/add_new_expense_notifer.dart';
 import 'package:spendwise/core/utils/date_time_callback.dart';
 import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
@@ -21,8 +25,10 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
   final _formKey = GlobalKey<FormState>();
   // final _firestoreService = FirestoreService();
 
-  final TextEditingController _amountCtrl = TextEditingController();
-  final TextEditingController _noteCtrl = TextEditingController();
+  final TextEditingController amountCtrl = TextEditingController();
+  final TextEditingController noteCtrl = TextEditingController();
+  ProviderSubscription<AsyncValue<dynamic>>?
+  addNewExpenseControllerSubscription;
 
   String? _category;
   DateTime _selectedDate = DateTime.now();
@@ -33,12 +39,24 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
   void initState() {
     super.initState();
     if (widget.expenseModel != null) {
-      _amountCtrl.text = widget.expenseModel?.amount.toString() ?? '0';
-      _noteCtrl.text = widget.expenseModel!.note ?? '';
+      amountCtrl.text = widget.expenseModel?.amount.toString() ?? '0';
+      noteCtrl.text = widget.expenseModel!.note ?? '';
       _category = widget.expenseModel!.category;
       _selectedDate = DateTime.parse(widget.expenseModel!.date);
       expenseStatus = widget.expenseModel!.status;
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      addNewExpenseControllerSubscription = ref.listenManual<AsyncValue>(
+        addExpenseControllerProvider,
+        (prev, next) {
+          next.whenData((_) {
+            if (context.mounted) {
+              Navigator.pop(context, true);
+            }
+          });
+        },
+      );
+    });
   }
 
   void _saveExpense() async {
@@ -47,8 +65,8 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
         id: widget.expenseModel?.id ?? '',
 
         category: _category ?? '',
-        note: _noteCtrl.text.trim(),
-        amount: double.parse(_amountCtrl.text.trim()),
+        note: noteCtrl.text.trim(),
+        amount: double.parse(amountCtrl.text.trim()),
         date: _selectedDate.toIso8601String(),
         status: expenseStatus,
         timestamp: _selectedDate,
@@ -57,14 +75,22 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
           ? ref
                 .read(addExpenseControllerProvider.notifier)
                 .editExpense(
-                  context,
                   expenseId: widget.expenseModel!.id,
                   expense: expense,
                 )
           : ref
                 .read(addExpenseControllerProvider.notifier)
-                .addExpense(context, expense: expense);
+                .addExpense(expense: expense);
     }
+  }
+
+  @override
+  void dispose() {
+    amountCtrl.dispose();
+    noteCtrl.dispose();
+    addNewExpenseControllerSubscription?.close();
+    log('Add Expense Screen addNewExpenseControllerSubscription disposed');
+    super.dispose();
   }
 
   @override
@@ -82,10 +108,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
             IconButton(
               onPressed: () => ref
                   .read(addExpenseControllerProvider.notifier)
-                  .deleteExpense(
-                    context,
-                    expenseId: widget.expenseModel?.id ?? '',
-                  ),
+                  .deleteExpense(expenseId: widget.expenseModel?.id ?? ''),
               icon: const Icon(Icons.delete_outlined, color: Colors.red),
             ),
         ],
@@ -100,7 +123,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
               child: ListView(
                 children: [
                   TextFormField(
-                    controller: _amountCtrl,
+                    controller: amountCtrl,
                     maxLength: 10,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: const InputDecoration(
@@ -125,9 +148,9 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                     items: _categories
                         .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                         .toList(),
-                    onChanged: (v) => _category = v,
-                    validator: (v) =>
-                        v == null ? StringConstants.selectCategory : null,
+                    onChanged: (newValue) => _category = newValue,
+                    validator: (value) =>
+                        value == null ? StringConstants.selectCategory : null,
                   ),
                   const SizedBox(height: 16),
                   GestureDetector(
@@ -163,7 +186,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
-                    controller: _noteCtrl,
+                    controller: noteCtrl,
                     decoration: const InputDecoration(
                       labelText: StringConstants.noteOptional,
                       prefixIcon: Icon(Icons.note_alt_outlined),
@@ -180,18 +203,9 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                     ),
                   ],
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _saveExpense,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      StringConstants.saveExpense,
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  SpendWiseButton(
+                    title: StringConstants.saveExpense,
+                    onTap: _saveExpense,
                   ),
                 ],
               ),
@@ -199,35 +213,6 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
           );
         },
       ),
-    );
-  }
-}
-
-class MarkInvalidExpense extends StatelessWidget {
-  const MarkInvalidExpense({
-    super.key,
-    this.status = 'valid',
-    this.onStatusChanged,
-  });
-  final String status;
-  final Function(String status)? onStatusChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final ValueNotifier<String> statusNotifier = ValueNotifier<String>(status);
-    return ValueListenableBuilder(
-      valueListenable: statusNotifier,
-      builder: (context, value, child) {
-        return CheckboxListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          value: value == 'invalid',
-          title: const Text(StringConstants.markInvalid),
-          onChanged: (val) {
-            statusNotifier.value = val == true ? 'invalid' : 'valid';
-            onStatusChanged?.call(statusNotifier.value);
-          },
-        );
-      },
     );
   }
 }

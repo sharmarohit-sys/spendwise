@@ -4,9 +4,8 @@ import 'package:spendwise/core/services/firestore/data/repository/firestore_repo
 import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
 
 class EditExpenseUseCase {
-  final FirestoreRepositoryImpl repository;
-
   EditExpenseUseCase(this.repository);
+  final FirestoreRepositoryImpl repository;
 
   Future<bool> call({
     required String expenseId,

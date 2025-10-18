@@ -1,22 +1,74 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spendwise/core/utils/full_screen_loader.dart';
+import 'package:spendwise/core/utils/spendwise_toast.dart';
 import 'package:spendwise/core/widgets/spend_wise_button.dart';
 import 'package:spendwise/core/widgets/spend_wise_text_field.dart';
 import 'package:spendwise/core/constants/dimensions.dart';
 import 'package:spendwise/core/constants/string_constants.dart';
 import 'package:spendwise/features/authentication/presentation/notifier/register_screen_controller.dart';
 import 'package:spendwise/features/authentication/presentation/widgets/auth_rich_text.dart';
+import 'package:spendwise/routes.dart';
 
-class RegisterScreen extends ConsumerWidget {
-  RegisterScreen({super.key});
+class RegisterScreen extends ConsumerStatefulWidget {
+  const RegisterScreen({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final userNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  ProviderSubscription<AsyncValue<dynamic>>? registerControllerSubscription;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      registerControllerSubscription = ref.listenManual<AsyncValue>(
+        registerScreenControllerProvider,
+        (prev, next) {
+          next.when(
+            data: (_) {
+              FullScreenLoader.hide(context);
+              if (context.mounted) {
+                Navigator.pushReplacementNamed(context, Routes.homeScreen);
+              }
+            },
+            error: (error, _) {
+              FullScreenLoader.hide(context);
+              SpendWiseToast.error(error.toString());
+            },
+            loading: () {
+              FullScreenLoader.show(context);
+            },
+          );
+        },
+      );
+    });
+  }
+
+  void _navigateToLoginScreen(BuildContext context) {
+    Navigator.pushReplacementNamed(context, Routes.loginScreen);
+  }
+
+  @override
+  void dispose() {
+    userNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    registerControllerSubscription?.close();
+    log('Register Screen registerControllerSubscription disposed');
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final registerController = ref.watch(registerScreenControllerProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -76,7 +128,6 @@ class RegisterScreen extends ConsumerWidget {
                         ref
                             .read(registerScreenControllerProvider.notifier)
                             .registerUser(
-                              context,
                               emailId: emailController.text,
                               password: passwordController.text,
                               userName: userNameController.text,
@@ -88,9 +139,7 @@ class RegisterScreen extends ConsumerWidget {
 
                 AuthRichText(
                   isLogin: false,
-                  onTap: () => ref
-                      .read(registerScreenControllerProvider.notifier)
-                      .navigateToLoginScreen(context),
+                  onTap: () => _navigateToLoginScreen(context),
                 ),
               ],
             ),

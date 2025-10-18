@@ -1,23 +1,73 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spendwise/core/utils/full_screen_loader.dart';
+import 'package:spendwise/core/utils/spendwise_toast.dart';
 import 'package:spendwise/core/widgets/spend_wise_button.dart';
 import 'package:spendwise/core/widgets/spend_wise_text_field.dart';
 import 'package:spendwise/core/constants/dimensions.dart';
 import 'package:spendwise/core/constants/string_constants.dart';
 import 'package:spendwise/features/authentication/presentation/notifier/login_screen_notifier.dart';
 import 'package:spendwise/features/authentication/presentation/widgets/auth_rich_text.dart';
-import 'package:spendwise/core/widgets/async_value_widget.dart';
+import 'package:spendwise/routes.dart';
 
-class LoginScreen extends ConsumerWidget {
-  LoginScreen({super.key});
-
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  ProviderSubscription<AsyncValue<dynamic>>? loginControllerSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loginControllerSubscription = ref.listenManual<AsyncValue>(
+        loginScreenControllerProvider,
+        (prev, next) {
+          next.when(
+            data: (_) {
+              FullScreenLoader.hide(context);
+              if (context.mounted) {
+                Navigator.pushReplacementNamed(context, Routes.homeScreen);
+              }
+            },
+            error: (error, _) {
+              FullScreenLoader.hide(context);
+              SpendWiseToast.error(error.toString());
+            },
+            loading: () {
+              FullScreenLoader.show(context);
+            },
+          );
+        },
+      );
+    });
+  }
+
+  void _navigateToRegisterScreen(BuildContext context) =>
+      Navigator.pushNamed(context, Routes.registerScreen);
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    loginControllerSubscription?.close();
+    log('Login Screen loginControllerSubscription disposed');
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final loginController = ref.watch(loginScreenControllerProvider);
-    final formKey = GlobalKey<FormState>();
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -69,7 +119,6 @@ class LoginScreen extends ConsumerWidget {
                             .login(
                               emailId: emailController.text,
                               password: passwordController.text,
-                              context: context,
                             );
                       }
                     },
@@ -78,9 +127,7 @@ class LoginScreen extends ConsumerWidget {
 
                 AuthRichText(
                   isLogin: true,
-                  onTap: () => ref
-                      .read(loginScreenControllerProvider.notifier)
-                      .navigateToRegisterScreen(context),
+                  onTap: () => _navigateToRegisterScreen(context),
                 ),
               ],
             ),

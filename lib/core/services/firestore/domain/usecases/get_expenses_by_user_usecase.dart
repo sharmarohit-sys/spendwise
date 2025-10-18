@@ -8,7 +8,12 @@ class GetExpensesByUserUseCase {
   final FirestoreRepositoryImpl repository;
 
   Future<List<ExpenseModel>> call() async {
-    return repository.getExpensesByUser();
+    final expenseList = await repository.getExpensesByUser();
+    expenseList.sort(
+      (left, right) =>
+          DateTime.parse(right.date).compareTo(DateTime.parse(left.date)),
+    );
+    return expenseList;
   }
 }
 

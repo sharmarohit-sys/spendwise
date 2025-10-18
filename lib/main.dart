@@ -41,7 +41,6 @@ class MyApp extends ConsumerWidget {
         debugPrint('✅ Internet Connected');
       }
     });
-
     return MaterialApp(
       title: StringConstants.appTitle,
       debugShowCheckedModeBanner: false,

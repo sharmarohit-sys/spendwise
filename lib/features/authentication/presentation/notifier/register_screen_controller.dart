@@ -10,8 +10,7 @@ class RegisterScreenController extends StateNotifier<AsyncValue<void>> {
 
   final RegisterUserUseCase _registerUserUseCase;
 
-  Future<bool> registerUser(
-    BuildContext context, {
+  Future<void> registerUser({
     required String emailId,
     required String password,
     required String userName,
@@ -25,24 +24,15 @@ class RegisterScreenController extends StateNotifier<AsyncValue<void>> {
       );
       if (result.isSuccess) {
         state = const AsyncValue.data(null);
-        if (context.mounted) Navigator.pushNamed(context, Routes.homeScreen);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result.error ?? 'Unable to login')),
-        );
         state = AsyncValue.error(
-          result.error ?? 'Unable to login',
+          result.error ?? 'Unable to register',
           StackTrace.current,
         );
       }
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
-    return false;
-  }
-
-  void navigateToLoginScreen(BuildContext context) {
-    Navigator.pushReplacementNamed(context, Routes.loginScreen);
   }
 }
 

@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:spendwise/core/constants/string_constants.dart';
 import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/utils/category_helper.dart';
 
 class ExpenseBarChart extends StatelessWidget {
   const ExpenseBarChart({super.key, required this.expenses});
@@ -14,8 +14,7 @@ class ExpenseBarChart extends StatelessWidget {
       final index = entry.key;
       final data = entry.value;
       final amount = data['amount'] as double;
-      final color = _getCategoryColor(data['category'] as String);
-
+      final color = CategoryHelper.color(data['category'] as String);
       return BarChartGroupData(
         x: index,
         barRods: [
@@ -53,21 +52,6 @@ class ExpenseBarChart extends StatelessWidget {
     );
   }
 
-  Color _getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case StringConstants.food:
-        return Colors.blue;
-      case StringConstants.travel:
-        return Colors.deepOrange;
-      case StringConstants.shopping:
-        return Colors.orangeAccent;
-      case StringConstants.coffee:
-        return Colors.purple;
-      default:
-        return Colors.green;
-    }
-  }
-
   List<Map<String, dynamic>> getChartData(List<ExpenseModel> expenses) {
     final Map<String, double> groupedData = {};
 
@@ -78,7 +62,6 @@ class ExpenseBarChart extends StatelessWidget {
         ifAbsent: () => expense.amount,
       );
     }
-
     return groupedData.entries
         .map((entry) => {'category': entry.key, 'amount': entry.value})
         .toList();

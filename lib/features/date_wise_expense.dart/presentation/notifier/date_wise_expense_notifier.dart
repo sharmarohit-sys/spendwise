@@ -13,40 +13,12 @@ class DateWiseExpenseNotifier
   final GetExpensesByDateUseCase _getExpensesByDateUseCase;
   Future<void> fetchDateWiseExpenses(DateTime dateTime) async {
     state = const AsyncValue.loading();
-
     try {
       final expenses = await _getExpensesByDateUseCase.call(dateTime);
-      final List<ExpenseModel> todayExpenses = filterExpensesByDate(
-        expenses,
-        dateTime,
-      );
-      state = AsyncValue.data(todayExpenses);
+      state = AsyncValue.data(expenses);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
-  }
-
-  List<ExpenseModel> filterExpensesByDate(
-    List<ExpenseModel> expenses,
-    DateTime? start,
-  ) {
-    DateTime? end = start?.add(Duration(days: 1));
-    final filtered = expenses.where((expense) {
-      final expenseDate = DateTime.parse(
-        expense.date,
-      ); // ISO string to DateTime
-      if (start != null && expenseDate.isBefore(start)) return false;
-      if (end != null && expenseDate.isAfter(end)) return false;
-      return true;
-    }).toList();
-
-    // Sort by date descending (latest first)
-    filtered.sort(
-      (left, right) =>
-          DateTime.parse(right.date).compareTo(DateTime.parse(left.date)),
-    );
-
-    return filtered;
   }
 }
 

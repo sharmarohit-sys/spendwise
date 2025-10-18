@@ -21,14 +21,11 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     required String uId,
   }) async {
     try {
-      // Add without id first
       final docRef = await _db.collection('user').add({
         'name': name,
         'email': email,
         'uId': uId,
       });
-
-      // Update the expense with the generated doc ID
       await docRef.update({'id': docRef.id});
       return true;
     } catch (e) {
@@ -39,10 +36,7 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
   @override
   Future<bool> addExpense({required ExpenseModel expense}) async {
     try {
-      // Add without id first
       final docRef = await _db.collection(collectionName).add(expense.toJson());
-
-      // Update the expense with the generated doc ID
       await docRef.update({'id': docRef.id});
       return true;
     } catch (e) {
@@ -50,7 +44,6 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
     }
   }
 
-  // New edit/update method
   @override
   Future<bool> editExpense({
     required String expenseId,
@@ -87,7 +80,6 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
       final snapshot = await _db
           .collection(collectionName)
           .where('status', isEqualTo: 'valid')
-          .orderBy('date', descending: true)
           .get();
 
       return snapshot.docs.map((e) => ExpenseModel.fromJson(e.data())).toList();

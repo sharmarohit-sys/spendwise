@@ -64,7 +64,6 @@ class _DateWiseExpenseState extends ConsumerState<DateWiseExpense> {
                     children: [
                       ExpenseBarChart(expenses: data),
                       const SizedBox(height: 16),
-
                       Text(
                         '\$${totalAmount.toStringAsFixed(2)}',
                         style: const TextStyle(
@@ -80,7 +79,6 @@ class _DateWiseExpenseState extends ConsumerState<DateWiseExpense> {
                           itemCount: data.length,
                           itemBuilder: (context, index) {
                             final expense = data[index];
-
                             return ExpenseTile(expense: expense);
                           },
                         ),
