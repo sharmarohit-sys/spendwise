@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:spendwise/core/constants/image_constant.dart';
+import 'package:spendwise/core/utils/spendwise_loader.dart';
 
 class FullScreenLoader {
   static bool _isShowing = false;
@@ -20,7 +22,8 @@ class FullScreenLoader {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CircularProgressIndicator(),
+              // const CircularProgressIndicator(),
+              const SpendwiseLoader(),
               if (message != null) ...[
                 const SizedBox(height: 16),
                 Text(

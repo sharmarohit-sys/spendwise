@@ -4,9 +4,8 @@ import 'package:spendwise/core/services/firestore/data/repository/firestore_repo
 import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
 
 class GetInvalidExpensesUseCase {
-  final FirestoreRepositoryImpl repository;
-
   GetInvalidExpensesUseCase(this.repository);
+  final FirestoreRepositoryImpl repository;
 
   Future<List<ExpenseModel>> call() async {
     return repository.getInvalidExpenses();

@@ -111,7 +111,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   child: SpendWiseButton(
                     title: StringConstants.login,
-                    isLoading: loginController.isLoading,
+
                     onTap: () {
                       if (formKey.currentState!.validate()) {
                         ref

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
@@ -14,9 +13,6 @@ class MockAddExpenseUseCase extends Mock implements AddExpenseUseCase {}
 class MockEditExpenseUseCase extends Mock implements EditExpenseUseCase {}
 
 class MockDeleteExpenseUseCase extends Mock implements DeleteExpenseUseCase {}
-
-// Fake BuildContext for non-widget tests
-class MockBuildContext extends Mock implements BuildContext {}
 
 void main() {
   late MockAddExpenseUseCase mockAddUseCase;
@@ -51,9 +47,7 @@ void main() {
         () => mockAddUseCase.call(expense: testExpense),
       ).thenThrow(Exception('Failed'));
 
-      final context = MockBuildContext();
-
-      await notifier.addExpense(context, expense: testExpense);
+      await notifier.addExpense(expense: testExpense);
 
       expect(notifier.state.error, isA<Exception>());
     });
@@ -63,9 +57,7 @@ void main() {
         () => mockEditUseCase.call(expenseId: '1', expense: testExpense),
       ).thenThrow(Exception('Failed'));
 
-      final context = MockBuildContext();
-
-      await notifier.editExpense(context, expense: testExpense, expenseId: '1');
+      await notifier.editExpense(expense: testExpense, expenseId: '1');
 
       expect(notifier.state.error, isA<Exception>());
     });
@@ -75,9 +67,7 @@ void main() {
         () => mockDeleteUseCase.call(expenseId: '1'),
       ).thenThrow(Exception('Failed'));
 
-      final context = MockBuildContext();
-
-      await notifier.deleteExpense(context, expenseId: '1');
+      await notifier.deleteExpense(expenseId: '1');
 
       expect(notifier.state.error, isA<Exception>());
     });
@@ -87,9 +77,7 @@ void main() {
         () => mockAddUseCase.call(expense: testExpense),
       ).thenAnswer((_) async => Future.value());
 
-      final context = MockBuildContext();
-
-      await notifier.addExpense(context, expense: testExpense);
+      await notifier.addExpense(expense: testExpense);
 
       expect(notifier.state, isA<AsyncData<ExpenseModel?>>());
     });
@@ -99,9 +87,7 @@ void main() {
         () => mockEditUseCase.call(expenseId: '1', expense: testExpense),
       ).thenAnswer((_) async => Future.value());
 
-      final context = MockBuildContext();
-
-      await notifier.editExpense(context, expense: testExpense, expenseId: '1');
+      await notifier.editExpense(expense: testExpense, expenseId: '1');
 
       expect(notifier.state, isA<AsyncData<ExpenseModel?>>());
     });
@@ -111,9 +97,7 @@ void main() {
         () => mockDeleteUseCase.call(expenseId: '1'),
       ).thenAnswer((_) async => Future.value());
 
-      final context = MockBuildContext();
-
-      await notifier.deleteExpense(context, expenseId: '1');
+      await notifier.deleteExpense(expenseId: '1');
 
       expect(notifier.state, isA<AsyncData<ExpenseModel?>>());
     });

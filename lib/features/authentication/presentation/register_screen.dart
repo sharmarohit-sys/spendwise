@@ -121,7 +121,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     vertical: Dimensions.padding * 5,
                   ),
                   child: SpendWiseButton(
-                    isLoading: registerController.isLoading,
                     title: StringConstants.register,
                     onTap: () {
                       if (formKey.currentState!.validate()) {

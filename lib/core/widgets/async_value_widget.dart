@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:spendwise/core/utils/spendwise_loader.dart';
 
 class AsyncValueWidget<T> extends StatelessWidget {
   const AsyncValueWidget({
@@ -18,8 +19,7 @@ class AsyncValueWidget<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return value.when(
       data: data,
-      loading: () =>
-          loading ?? const Center(child: CircularProgressIndicator()),
+      loading: () => loading ?? const Center(child: SpendwiseLoader()),
       error: (err, stack) =>
           errorBuilder?.call(err, stack) ??
           Center(

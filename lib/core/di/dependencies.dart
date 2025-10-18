@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,7 +22,13 @@ class Dependencies {
     getIt.registerSingleton<LocalStorage>(
       LocalStorage(getIt<SharedPreferences>()),
     );
-    getIt.registerSingleton<FirestoreRepositoryImpl>(FirestoreRepositoryImpl());
+    getIt.registerSingleton<FirestoreRepositoryImpl>(
+      FirestoreRepositoryImpl(
+        FirebaseFirestore.instance,
+        getIt<LocalStorage>(),
+      ),
+    );
+
     getIt.registerSingleton<AuthenticationRepository>(
       AuthenticationRepository(
         auth: getIt<FirebaseAuth>(),

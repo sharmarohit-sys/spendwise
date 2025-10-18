@@ -1,16 +1,13 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:spendwise/core/constants/shared_preference.dart';
-import 'package:spendwise/core/di/dependencies.dart';
 import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
 import 'package:spendwise/core/services/firestore/domain/repository/firestore_repository.dart';
 import 'package:spendwise/core/utils/local_storage.dart';
 
 class FirestoreRepositoryImpl implements FirestoreRepository {
-  final _db = FirebaseFirestore.instance;
-  final _loalDb = getIt<LocalStorage>();
-
+  FirestoreRepositoryImpl(this._db, this._localDb);
+  final FirebaseFirestore _db;
+  final LocalStorage _localDb;
   late String collectionName;
   String? email;
 
@@ -73,7 +70,7 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
   @override
   Future<List<ExpenseModel>> getExpensesByUser() async {
     if (email == null) {
-      email = _loalDb.readData(key: SharedPreference.emailIdKey);
+      email = _localDb.readData(key: SharedPreference.emailIdKey);
       collectionName = 'expenses$email';
     }
     try {
@@ -84,7 +81,6 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
 
       return snapshot.docs.map((e) => ExpenseModel.fromJson(e.data())).toList();
     } catch (e) {
-      log(e.toString());
       rethrow;
     }
   }
@@ -98,7 +94,6 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
           .get();
       return snapshot.docs.map((e) => ExpenseModel.fromJson(e.data())).toList();
     } catch (e) {
-      log(e.toString());
       rethrow;
     }
   }

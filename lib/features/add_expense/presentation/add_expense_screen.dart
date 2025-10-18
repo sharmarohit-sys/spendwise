@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/core/constants/string_constants.dart';
 import 'package:spendwise/core/widgets/spend_wise_button.dart';
+import 'package:spendwise/core/widgets/spend_wise_text_field.dart';
 import 'package:spendwise/features/add_expense/presentation/widgets/mark_invalid_expense.dart';
 import 'package:spendwise/features/add_expense/presentation/notifier/add_new_expense_notifer.dart';
 import 'package:spendwise/core/utils/date_time_callback.dart';
@@ -113,105 +114,110 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
             ),
         ],
       ),
-      body: AsyncValueWidget(
-        value: controller,
-        data: (data) {
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: _formKey,
-              child: ListView(
-                children: [
-                  TextFormField(
-                    controller: amountCtrl,
-                    maxLength: 10,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: const InputDecoration(
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: AsyncValueWidget(
+          value: controller,
+          data: (data) {
+            return Padding(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    SpendWiseTextField(
+                      controller: amountCtrl,
+                      maxLength: 10,
                       labelText: StringConstants.amount,
-                      counterText: '',
-                      prefixIcon: Icon(Icons.attach_money),
-                      border: OutlineInputBorder(),
+                      keyboardType: TextInputType.number,
+                      hintText: StringConstants.enterAmount,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      prefixIcon: const Icon(Icons.attach_money),
+                      validator: (v) => v == null || v.isEmpty
+                          ? StringConstants.enterAmount
+                          : null,
                     ),
-                    keyboardType: TextInputType.number,
-                    validator: (v) => v == null || v.isEmpty
-                        ? StringConstants.enterAmount
-                        : null,
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    value: _category,
-                    decoration: const InputDecoration(
-                      labelText: StringConstants.category,
-                      prefixIcon: Icon(Icons.category),
-                      border: OutlineInputBorder(),
+
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      value: _category,
+                      decoration: const InputDecoration(
+                        labelText: StringConstants.category,
+                        prefixIcon: Icon(Icons.category),
+                        border: OutlineInputBorder(),
+                      ),
+                      items: _categories
+                          .map(
+                            (e) => DropdownMenuItem(value: e, child: Text(e)),
+                          )
+                          .toList(),
+                      onChanged: (newValue) => _category = newValue,
+                      validator: (value) =>
+                          value == null ? StringConstants.selectCategory : null,
                     ),
-                    items: _categories
-                        .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                        .toList(),
-                    onChanged: (newValue) => _category = newValue,
-                    validator: (value) =>
-                        value == null ? StringConstants.selectCategory : null,
-                  ),
-                  const SizedBox(height: 16),
-                  GestureDetector(
-                    onTap: () async {
-                      final date = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime.now(),
-                      );
-                      if (date != null) setState(() => _selectedDate = date);
-                    },
-                    child: Container(
-                      height: 56,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadiusGeometry.circular(4),
-                        border: Border.all(
-                          color: const Color(0xFF000000),
-                          width: 1.0,
-                          style: BorderStyle.solid,
+                    const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime.now(),
+                        );
+                        if (date != null) setState(() => _selectedDate = date);
+                      },
+                      child: Container(
+                        height: 56,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadiusGeometry.circular(4),
+                          border: Border.all(
+                            color: const Color(0xFF000000),
+                            width: 1.0,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.calendar_today_outlined),
+                            const SizedBox(width: 16),
+                            Text(
+                              DateTimeCallback.getTimeInString(_selectedDate),
+                            ),
+                          ],
                         ),
                       ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.calendar_today_outlined),
-                          const SizedBox(width: 16),
-                          Text(DateTimeCallback.getTimeInString(_selectedDate)),
-                        ],
-                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: noteCtrl,
-                    decoration: const InputDecoration(
+                    const SizedBox(height: 16),
+                    SpendWiseTextField(
+                      controller: noteCtrl,
+
                       labelText: StringConstants.noteOptional,
-                      prefixIcon: Icon(Icons.note_alt_outlined),
-                      border: OutlineInputBorder(),
+                      hintText: StringConstants.noteOptional,
+
+                      prefixIcon: const Icon(Icons.note_alt_outlined),
                     ),
-                  ),
 
-                  if (widget.expenseModel != null) ...[
-                    const SizedBox(height: 8),
+                    if (widget.expenseModel != null) ...[
+                      const SizedBox(height: 8),
 
-                    MarkInvalidExpense(
-                      status: expenseStatus,
-                      onStatusChanged: (status) => expenseStatus = status,
+                      MarkInvalidExpense(
+                        status: expenseStatus,
+                        onStatusChanged: (status) => expenseStatus = status,
+                      ),
+                    ],
+                    const SizedBox(height: 16),
+                    SpendWiseButton(
+                      title: StringConstants.saveExpense,
+                      onTap: _saveExpense,
                     ),
                   ],
-                  const SizedBox(height: 16),
-                  SpendWiseButton(
-                    title: StringConstants.saveExpense,
-                    onTap: _saveExpense,
-                  ),
-                ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

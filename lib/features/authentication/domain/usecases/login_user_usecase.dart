@@ -5,9 +5,8 @@ import 'package:spendwise/features/authentication/domain/repositories/authentica
 import 'package:spendwise/features/authentication/domain/model/result_model.dart';
 
 class LoginUserUseCase {
-  final AuthenticationRepositoryBase repository;
-
   LoginUserUseCase(this.repository);
+  final AuthenticationRepositoryBase repository;
 
   Future<Result> call({
     required String emailId,

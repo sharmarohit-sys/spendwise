@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/core/constants/image_constant.dart';
 import 'package:spendwise/core/constants/string_constants.dart';
 import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
+import 'package:spendwise/core/utils/full_screen_loader.dart';
 import 'package:spendwise/features/home/presentation/notifier/home_notifier.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_bar_chart.dart';
 import 'package:spendwise/features/home/presentation/widgets/expense_tile.dart';
@@ -22,6 +23,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateToAddExpense(context),
+
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
