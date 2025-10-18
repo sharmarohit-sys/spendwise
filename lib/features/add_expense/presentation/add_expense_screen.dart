@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -101,8 +102,8 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
       appBar: AppBar(
         title: Text(
           widget.expenseModel != null
-              ? StringConstants.editExpense
-              : StringConstants.addExpense,
+              ? StringConstants.editExpense.tr()
+              : StringConstants.addExpense.tr(),
         ),
         actions: [
           if (widget.expenseModel != null)
@@ -128,23 +129,23 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                     SpendWiseTextField(
                       controller: amountCtrl,
                       maxLength: 10,
-                      labelText: StringConstants.amount,
+                      labelText: StringConstants.amount.tr(),
                       keyboardType: TextInputType.number,
-                      hintText: StringConstants.enterAmount,
+                      hintText: StringConstants.enterAmount.tr(),
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       prefixIcon: const Icon(Icons.attach_money),
                       validator: (v) => v == null || v.isEmpty
-                          ? StringConstants.enterAmount
+                          ? StringConstants.enterAmount.tr()
                           : null,
                     ),
 
                     const SizedBox(height: 16),
                     DropdownButtonFormField<String>(
                       value: _category,
-                      decoration: const InputDecoration(
-                        labelText: StringConstants.category,
-                        prefixIcon: Icon(Icons.category),
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: StringConstants.category.tr(),
+                        prefixIcon: const Icon(Icons.category),
+                        border: const OutlineInputBorder(),
                       ),
                       items: _categories
                           .map(
@@ -152,8 +153,9 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                           )
                           .toList(),
                       onChanged: (newValue) => _category = newValue,
-                      validator: (value) =>
-                          value == null ? StringConstants.selectCategory : null,
+                      validator: (value) => value == null
+                          ? StringConstants.selectCategory.tr()
+                          : null,
                     ),
                     const SizedBox(height: 16),
                     GestureDetector(
@@ -193,8 +195,8 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                     SpendWiseTextField(
                       controller: noteCtrl,
 
-                      labelText: StringConstants.noteOptional,
-                      hintText: StringConstants.noteOptional,
+                      labelText: StringConstants.noteOptional.tr(),
+                      hintText: StringConstants.noteOptional.tr(),
 
                       prefixIcon: const Icon(Icons.note_alt_outlined),
                     ),
@@ -209,7 +211,7 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
                     ],
                     const SizedBox(height: 16),
                     SpendWiseButton(
-                      title: StringConstants.saveExpense,
+                      title: StringConstants.saveExpense.tr(),
                       onTap: _saveExpense,
                     ),
                   ],

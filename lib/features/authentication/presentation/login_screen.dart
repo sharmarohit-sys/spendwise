@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/core/utils/full_screen_loader.dart';
@@ -81,15 +82,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             key: formKey,
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
                     vertical: Dimensions.padding * 5,
                   ),
-                  child: Text(StringConstants.loginScreen),
+                  child: Text(StringConstants.loginScreen.tr()),
                 ),
                 SpendWiseTextField(
                   controller: emailController,
-                  hintText: StringConstants.emailHintText,
+                  hintText: StringConstants.emailHintText.tr(),
                   prefixIcon: const Icon(Icons.email),
                   validator: (value) {
                     return value!.isNotEmpty ? null : 'Enter email';
@@ -98,7 +99,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const SizedBox(height: Dimensions.padding * 3),
                 SpendWiseTextField(
                   controller: passwordController,
-                  hintText: StringConstants.password,
+                  hintText: StringConstants.password.tr(),
                   prefixIcon: const Icon(Icons.lock),
                   validator: (value) {
                     return value!.isNotEmpty ? null : 'Enter password';
@@ -110,7 +111,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     vertical: Dimensions.padding * 5,
                   ),
                   child: SpendWiseButton(
-                    title: StringConstants.login,
+                    title: StringConstants.login.tr(),
 
                     onTap: () {
                       if (formKey.currentState!.validate()) {

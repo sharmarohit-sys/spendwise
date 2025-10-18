@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spendwise/core/constants/string_constants.dart';
 
@@ -19,7 +20,7 @@ class MarkInvalidExpense extends StatelessWidget {
         return CheckboxListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           value: value == 'invalid',
-          title: const Text(StringConstants.markInvalid),
+          title: Text(StringConstants.markInvalid.tr()),
           onChanged: (val) {
             statusNotifier.value = val == true ? 'invalid' : 'valid';
             onStatusChanged?.call(statusNotifier.value);

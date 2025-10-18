@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:spendwise/core/constants/string_constants.dart';
 import 'package:spendwise/core/services/firestore/domain/model/expense_model.dart';
@@ -35,9 +36,9 @@ class InvalidTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: Colors.red.shade100,
         ),
-        child: const Text(
-          StringConstants.invalid,
-          style: TextStyle(
+        child: Text(
+          StringConstants.invalid.tr(),
+          style: const TextStyle(
             fontWeight: FontWeight.w700,
             fontSize: 16,
             color: Colors.red,

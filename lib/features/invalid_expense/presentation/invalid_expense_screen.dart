@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/core/constants/string_constants.dart';
@@ -11,7 +12,7 @@ class InvalidExpenseScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(StringConstants.invalidExpense)),
+      appBar: AppBar(title: Text(StringConstants.invalidExpense.tr())),
       body: Consumer(
         builder: (context, ref, child) {
           final controller = ref.watch(invalidExpenseControllerProvider);

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/core/utils/full_screen_loader.dart';
@@ -83,15 +84,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             key: formKey,
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(
+                Padding(
+                  padding: const EdgeInsets.symmetric(
                     vertical: Dimensions.padding * 5,
                   ),
-                  child: Text(StringConstants.registerScreen),
+                  child: Text(StringConstants.registerScreen.tr()),
                 ),
                 SpendWiseTextField(
                   controller: userNameController,
-                  hintText: StringConstants.userNameHintText,
+                  hintText: StringConstants.userNameHintText.tr(),
                   prefixIcon: const Icon(Icons.person),
                   validator: (value) {
                     return value!.isNotEmpty ? null : 'Enter user name';
@@ -100,7 +101,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 const SizedBox(height: Dimensions.padding * 3),
                 SpendWiseTextField(
                   controller: emailController,
-                  hintText: StringConstants.emailHintText,
+                  hintText: StringConstants.emailHintText.tr(),
                   prefixIcon: const Icon(Icons.email),
                   validator: (value) {
                     return value!.isNotEmpty ? null : 'Enter email';
@@ -109,7 +110,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 const SizedBox(height: Dimensions.padding * 3),
                 SpendWiseTextField(
                   controller: passwordController,
-                  hintText: StringConstants.password,
+                  hintText: StringConstants.password.tr(),
                   prefixIcon: const Icon(Icons.lock),
                   validator: (value) {
                     return value!.isNotEmpty ? null : 'Enter password';
@@ -121,7 +122,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     vertical: Dimensions.padding * 5,
                   ),
                   child: SpendWiseButton(
-                    title: StringConstants.register,
+                    title: StringConstants.register.tr(),
                     onTap: () {
                       if (formKey.currentState!.validate()) {
                         ref

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:spendwise/core/constants/dimensions.dart';
@@ -18,12 +19,14 @@ class AuthRichText extends StatelessWidget {
           children: [
             TextSpan(
               text: isLogin
-                  ? StringConstants.dontHaveAccountText
-                  : StringConstants.alreadyHaveAccountText,
+                  ? StringConstants.dontHaveAccountText.tr()
+                  : StringConstants.alreadyHaveAccountText.tr(),
               style: TextStyle(color: colorScheme.onSurface),
             ),
             TextSpan(
-              text: isLogin ? StringConstants.signUp : StringConstants.login,
+              text: isLogin
+                  ? StringConstants.signUp.tr()
+                  : StringConstants.login.tr(),
               style: TextStyle(color: colorScheme.primary),
               recognizer: TapGestureRecognizer()..onTap = onTap,
             ),

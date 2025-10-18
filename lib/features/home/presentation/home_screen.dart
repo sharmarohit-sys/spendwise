@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/core/constants/image_constant.dart';
@@ -32,7 +33,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             Image.asset(ImageConstant.logo, height: 30),
             const SizedBox(width: 16),
-            const Text(StringConstants.allExpense),
+            Text(StringConstants.allExpense.tr()),
             const Spacer(),
             IconButton(
               onPressed: () => _navigateToDateWiseExpenseScreen(context),

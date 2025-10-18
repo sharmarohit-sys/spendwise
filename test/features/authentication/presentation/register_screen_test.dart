@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,7 +21,8 @@ void main() {
       find.byWidgetPredicate(
         (widget) =>
             widget is TextField &&
-            widget.decoration?.hintText == StringConstants.userNameHintText,
+            widget.decoration?.hintText ==
+                StringConstants.userNameHintText.tr(),
       ),
       findsOneWidget,
     );
@@ -29,7 +31,7 @@ void main() {
       find.byWidgetPredicate(
         (widget) =>
             widget is TextField &&
-            widget.decoration?.hintText == StringConstants.emailHintText,
+            widget.decoration?.hintText == StringConstants.emailHintText.tr(),
       ),
       findsOneWidget,
     );

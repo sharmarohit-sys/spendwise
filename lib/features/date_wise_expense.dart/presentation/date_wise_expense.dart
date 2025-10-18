@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:spendwise/core/constants/string_constants.dart';
@@ -22,7 +23,7 @@ class _DateWiseExpenseState extends ConsumerState<DateWiseExpense> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        title: const Text(StringConstants.dateWiseExpense),
+        title: Text(StringConstants.dateWiseExpense.tr()),
       ),
       body: Column(
         children: [
@@ -38,17 +39,17 @@ class _DateWiseExpenseState extends ConsumerState<DateWiseExpense> {
               value: controller,
               data: (data) {
                 if (data.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Column(
                       children: [
-                        Spacer(),
-                        Icon(
+                        const Spacer(),
+                        const Icon(
                           Icons.receipt_long_outlined,
                           color: Colors.blueGrey,
                           size: 150,
                         ),
-                        Text(StringConstants.noDataAvailable),
-                        Spacer(),
+                        Text(StringConstants.noDataAvailable.tr()),
+                        const Spacer(),
                       ],
                     ),
                   );
